@@ -30,6 +30,5 @@ public class RoomController {
     public Room add(@RequestBody RoomDto roomDto) {
         return roomSerivice.add(roomDto);
     }
-    
 
 }

@@ -7,6 +7,15 @@ public class RoomDto {
     private String RoomName;
     private String RoomDescription;
     private String RoomAddress;
+    private Integer RoomStatus;
+
+    public Integer getRoomStatus() {
+        return RoomStatus;
+    }
+
+    public void setRoomStatus(Integer roomStatus) {
+        RoomStatus = roomStatus;
+    }
 
     public RoomDto() {
     }
@@ -23,10 +32,12 @@ public class RoomDto {
         RoomID = roomID;
     }
 
-    public RoomDto(String roomName, String roomDescription, String roomAddress) {
+    public RoomDto(Integer roomID, String roomName, String roomDescription, String roomAddress, Integer roomStatus) {
+        RoomID = roomID;
         RoomName = roomName;
         RoomDescription = roomDescription;
         RoomAddress = roomAddress;
+        RoomStatus = roomStatus;
     }
 
     public String getRoomName() {
@@ -56,9 +67,11 @@ public class RoomDto {
     @Override
     public String toString() {
         return "RoomDto{" +
-                "RoomName='" + RoomName + '\'' +
+                "RoomID=" + RoomID +
+                ", RoomName='" + RoomName + '\'' +
                 ", RoomDescription='" + RoomDescription + '\'' +
                 ", RoomAddress='" + RoomAddress + '\'' +
+                ", RoomStatus=" + RoomStatus +
                 '}';
     }
 }

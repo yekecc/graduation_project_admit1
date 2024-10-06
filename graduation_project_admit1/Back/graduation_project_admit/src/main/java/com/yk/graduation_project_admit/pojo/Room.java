@@ -15,6 +15,20 @@ public class Room {
     private String RoomDescription;
     @Column(name = "room_address")
     private String RoomAddress;
+    @Column(name = "room_status", columnDefinition = "INTEGER DEFAULT 0 ")
+    private Integer status;
+
+    public Room(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public Integer getRoomID() {
         return RoomID;
@@ -65,6 +79,7 @@ public class Room {
                 ", RoomName='" + RoomName + '\'' +
                 ", RoomDescription='" + RoomDescription + '\'' +
                 ", RoomAddress='" + RoomAddress + '\'' +
+                ", status=" + status +
                 '}';
     }
 }
