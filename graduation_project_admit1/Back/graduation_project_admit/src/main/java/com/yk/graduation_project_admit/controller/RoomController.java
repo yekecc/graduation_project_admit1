@@ -1,5 +1,6 @@
 package com.yk.graduation_project_admit.controller;
 
+import com.yk.graduation_project_admit.pojo.ResponseMessage;
 import com.yk.graduation_project_admit.pojo.Room;
 import com.yk.graduation_project_admit.pojo.dto.RoomDto;
 import com.yk.graduation_project_admit.serivice.RoomSerivice;
@@ -12,23 +13,36 @@ import org.springframework.web.bind.annotation.*;
 public class RoomController {
     @Autowired
     RoomSerivice roomSerivice;
+
+
     @GetMapping
-    public Iterable<Room> getRoom() {
-        return roomSerivice.getRoom();
+    public ResponseMessage getRoom() {
+        Iterable<Room> data = roomSerivice.getRoom();
+        return ResponseMessage.success(data);
     }
 
     /**
-     * @param roomDto
-     * {
-     *     "roomName": "音乐室01",
-     *     "roomDescription": "里面有钢琴*2，小提琴*50",
-     *     "roomAddress": "科技楼605"
-     * }
+     * @param roomDto {
+     *                "roomName": string,
+     *                "roomDescription": string,
+     *                "roomAddress":string
+     *                }
      * @return
      */
     @PostMapping
-    public Room add(@RequestBody RoomDto roomDto) {
-        return roomSerivice.add(roomDto);
+    public ResponseMessage add(@RequestBody RoomDto roomDto) {
+        Room data = roomSerivice.add(roomDto);
+        return ResponseMessage.success(data);
     }
 
+    /**
+     *
+     * @param roomId
+     * @return
+     */
+    @DeleteMapping
+    public ResponseMessage deleteRoom(Integer roomId) {
+        roomSerivice.deleteRoom(roomId);
+        return ResponseMessage.success();
+    }
 }

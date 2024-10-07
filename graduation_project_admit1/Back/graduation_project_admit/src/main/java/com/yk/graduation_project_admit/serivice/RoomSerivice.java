@@ -13,15 +13,20 @@ import org.springframework.stereotype.Service;
 public class RoomSerivice {
     @Autowired
     RoomRepository roomRepository;
-    public Iterable<Room> getRoom(){
+
+    public Iterable<Room> getRoom() {
         return roomRepository.findAll();
     }
 
     public Room add(RoomDto roomDto) {
         Room roompojo = new Room();
-        BeanUtils.copyProperties(roomDto,roompojo);
+        BeanUtils.copyProperties(roomDto, roompojo);
         roompojo.setStatus(0);
-        System.out.println("roomDto"+roomDto);
+        System.out.println("roomDto" + roomDto);
         return roomRepository.save(roompojo);
+    }
+
+    public void deleteRoom(Integer roomId) {
+        roomRepository.deleteById(roomId);
     }
 }
