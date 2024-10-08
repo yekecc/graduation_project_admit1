@@ -1,55 +1,82 @@
 <script setup>
+import { Layout, message, Upload } from 'ant-design-vue';
 import { ref } from 'vue';
-
-const inputValue = ref({ account: '', password: '' });
+import { login } from '../../api/login'
+import AdmitData from '../../store/store';
+import router from '../../router/router';
+// const inputValue = ref({ account: '', password: '' });
 const isFocused = ref({ account: false, password: false });
+
+const { updata } = AdmitData()
+
+const formData = ref({
+    userNumber: '',
+    password: ''    
+})
+
+
+const handlogin = async () => {
+    const response = await login(formData.value);
+    console.log(response.data)
+
+    updata(response.data)
+    
+
+    if (response.data != null) {
+        console.log("okk")
+        router.push({
+            name: 'Layout'
+       })
+    } else {
+        message.value = '账号或密码错误'
+    }
+    console.log(1111111111111111111111)
+}
 </script>
 
 <template>
     <div class="login_box">
         <h2>管理员登录</h2>
-        <form action="">
+        <form action="" @submit.prevent="handlogin">
       <div class="adm_box">
         <input
           type="text"
           name=""
           id=""
     
-          v-model="inputValue.account"
+          v-model="formData.userNumber"
           @focus="isFocused.account = true"
           @blur="isFocused.account = false"
         >
-        <label for="" :class="{ hidden: isFocused.account || inputValue.account }">账号</label>
+        <label for="" :class="{ hidden: isFocused.account || formData.userNumber }" >账号</label>
       </div>
       <div class="adm_box">
         <input
           type="password"
           name=""
           id=""
-          v-model="inputValue.password"
+          v-model="formData.password"
           @focus="isFocused.password = true"
           @blur="isFocused.password = false"
         >
-        <label for="" :class="{ hidden: isFocused.password || inputValue.password }">密码</label>
+        <label for="" :class="{ hidden: isFocused.password || formData.password }">密码</label>
       </div>
       <!-- <div class="remember">
         <label for="">
           <input type="checkbox" name="" id="">记住密码
         </label>
       </div> -->
-      <button>登录</button>
+      <button type="submit">登录</button>
     </form>
     </div>
 </template>
 
 <style scoped>
- /* template{
-    width: 100%;
-    height: 100%;
+ body{
     margin: 0;
     padding: 0;
     background-color: #8ca5c0;
- } */
+ }
 
  .hidden {
   display: none;
@@ -100,8 +127,8 @@ const isFocused = ref({ account: false, password: false });
 
 .login_box .adm_box input:focus ~ label,
 .login_box .adm_box input:valid ~ label{
-    top:-35px;
-    left: -140px;
+    top:-20px;
+    left: 0;
     color: #777;
     font-size: 12px;
 }
@@ -115,7 +142,7 @@ const isFocused = ref({ account: false, password: false });
     outline: none;
     margin: auto;
     margin-top: 20px;
-    /* padding: 15px; */
+    padding: 15px;
     font-size: 18px;
     border-radius: 5px;
     cursor: pointer;
