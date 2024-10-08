@@ -151,13 +151,11 @@ export default defineComponent({
             name: '',
             time1: '',
             number1: 0,
-            // ...其他时间段和数量的响应式状态
         });
 
         const handleFinish = (values) => {
-            // 将表单数据添加到data数组中
             data.push(values);
-            showModal.value = false; // 关闭模态框
+            showModal.value = false;
         };
 
         return {

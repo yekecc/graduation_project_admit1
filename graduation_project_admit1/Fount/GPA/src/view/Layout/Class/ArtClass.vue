@@ -1,13 +1,32 @@
 <template>
+    <a-button type="primary" @click="showModal = true" style="margin: 10px;">添加</a-button>
     <a-table :columns="columns" :data-source="data" :scroll="{ x: 1300 }">
         <template #action>
             <a-button type="primary" style="margin-right:8px ;">修改</a-button>
             <a-button type="primary">删除</a-button>
         </template>
     </a-table>
+    <a-modal v-model:visible="showModal" title="添加教室信息">
+        <a-form :model="formState" @finish="handleFinish">
+            <a-form-item label="教室" name="name">
+                <a-input v-model:value="formState.name" />
+            </a-form-item>
+            <a-form-item label="时间" name="time1">
+                <a-cascader v-model:value="value" :options="options" placeholder="请选择时间段" />
+            </a-form-item>
+            <a-form-item label="数量" name="number1">
+                <a-input-number v-model:value="formState.number1" />
+            </a-form-item>
+            <a-form-item>
+                <a-button type="primary" html-type="submit">提交</a-button>
+            </a-form-item>
+        </a-form>
+    </a-modal>
 </template>
 <script>
 import { defineComponent } from 'vue';
+import { Form, Input, Button, Modal, InputNumber, Table } from 'ant-design-vue';
+import { ref } from 'vue';
 const columns = [
     {
         title: '教室',
@@ -101,11 +120,52 @@ const data = [
         number4: 2,
     },
 ];
+const options = [
+    {
+        value: '8:30-9:50',
+        label: '8:30-9:50',
+    }, {
+        value: '10:10-11:30',
+        label: '10:10-11:30',
+    }, {
+        value: '13:50-15:10',
+        label: '13:50-15:10',
+    }, {
+        value: '15:20-16:40',
+        label: '15:20-16:40',
+    }
+];
 export default defineComponent({
-    data() {
+    components: {
+        AButton: Button,
+        ATable: Table,
+        AForm: Form,
+        AFormItem: Form.Item,
+        AInput: Input,
+        AInputNumber: InputNumber,
+        AModal: Modal,
+    },
+    setup() {
+        const showModal = ref(false);
+        const formState = ref({
+            name: '',
+            time1: '',
+            number1: 0,
+        });
+
+        const handleFinish = (values) => {
+            data.push(values);
+            showModal.value = false;
+        };
+
         return {
             data,
             columns,
+            showModal,
+            formState,
+            handleFinish,
+            value: ref([]),
+            options,
         };
     },
 });
