@@ -15,7 +15,7 @@ const routes = [
         redirect: "/Layout",
         children: [{
             path: '/Layout',
-            component: import('../view/Layout/ad_Index.vue'),
+            component: import('../view/Layout/AppointmentList.vue'),
             meta: {
                 title: '预约列表'
             }
