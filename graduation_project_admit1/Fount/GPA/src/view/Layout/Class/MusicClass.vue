@@ -14,9 +14,9 @@
             <a-form-item label="时间" name="time1">
                 <a-cascader v-model:value="value" :options="options" placeholder="请选择时间段" />
             </a-form-item>
-            <a-form-item label="数量" name="number1">
+            <!-- <a-form-item label="数量" name="number1">
                 <a-input-number v-model:value="formState.number1" />
-            </a-form-item>
+            </a-form-item> -->
             <a-form-item>
                 <a-button type="primary" html-type="submit">提交</a-button>
             </a-form-item>
@@ -35,21 +35,21 @@ const columns = [
         key: 'name',
         fixed: 'left',
     },
-    {
-        title: '可预约总数量',
-        width: 80,
-        dataIndex: 'total_quantity',
-        key: 'total_quantity',
-        fixed: 'left',
-    },
+    // {
+    //     title: '可预约总数量',
+    //     width: 80,
+    //     dataIndex: 'total_quantity',
+    //     key: 'total_quantity',
+    //     fixed: 'left',
+    // },
     {
         title: '时间段',
         dataIndex: 'time1',
         key: '1',
     },
     {
-        title: '数量',
-        dataIndex: 'number1',
+        title: '状态',
+        dataIndex: 'status1',
         key: '2',
     },
     {
@@ -58,8 +58,8 @@ const columns = [
         key: '3',
     },
     {
-        title: '数量',
-        dataIndex: 'number2',
+        title: '状态',
+        dataIndex: 'status2',
         key: '4',
     },
     {
@@ -68,8 +68,8 @@ const columns = [
         key: '5',
     },
     {
-        title: '数量',
-        dataIndex: 'number3',
+        title: '状态',
+        dataIndex: 'status3',
         key: '6',
     },
     {
@@ -78,8 +78,8 @@ const columns = [
         key: '7',
     },
     {
-        title: '数量',
-        dataIndex: 'number4',
+        title: '状态',
+        dataIndex: 'status4',
         key: '8',
     },
     {
@@ -96,28 +96,28 @@ const data = [
     {
         key: '1',
         name: '教学楼101',
-        total_quantity: 20,
+        // total_quantity: 20,
         time1: '8:30-9:50',
-        number1: 2,
+        status1: '可预约',
         time2: '10:10-11:30',
-        number2: 3,
+        status2: '可预约',
         time3: '13:50-15:10',
-        number3: 4,
+        status3: '不可预约',
         time4: '15:20-16:40',
-        number4: 5,
+        status4: '可预约',
     },
     {
         key: '2',
         name: '教学楼102',
-        total_quantity: 20,
+        // total_quantity: 20,
         time1: '8:30-9:50',
-        number1: 5,
+        status1: '可预约',
         time2: '10:10-11:30',
-        number2: 4,
+        status2: '可预约',
         time3: '13:50-15:10',
-        number3: 3,
+        status3: '不可预约',
         time4: '15:20-16:40',
-        number4: 2,
+        status4: '可预约',
     },
 ];
 const options = [
