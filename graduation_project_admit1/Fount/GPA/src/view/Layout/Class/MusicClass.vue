@@ -1,5 +1,5 @@
 <template>
-    <a-button type="primary" @click="showModal = true" style="margin: 10px;">添加</a-button>
+    <!-- <a-button type="primary" @click="showModal = true" style="margin: 10px;">添加</a-button> -->
     <a-table :columns="columns" :data-source="data" :scroll="{ x: 1300 }">
         <template #action>
             <a-button type="primary" style="margin-right:8px ;">修改</a-button>
