@@ -9,25 +9,36 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "room_id")
     private Integer RoomID;
-    @Column(name = "room_name")
+    @Column(name = "room_name", nullable = false)
     private String RoomName;
     @Column(name = "room_description")
     private String RoomDescription;
-    @Column(name = "room_address")
+    @Column(name = "room_address", nullable = false)
     private String RoomAddress;
-    @Column(name = "room_status", columnDefinition = "INTEGER DEFAULT 0 ")
-    private Integer status;
+    @Column(name = "room_type", nullable = false)
+    private String RoomType;
+    @Column(name = "room_status01", columnDefinition = "INTEGER DEFAULT 0 ")
+    private Integer status01;
+    @Column(name = "room_status02", columnDefinition = "INTEGER DEFAULT 0 ")
+    private Integer status02;
+    @Column(name = "room_status03", columnDefinition = "INTEGER DEFAULT 0 ")
+    private Integer status03;
+    @Column(name = "room_status04", columnDefinition = "INTEGER DEFAULT 0 ")
+    private Integer status04;
 
-    public Room(Integer status) {
-        this.status = status;
+    public Room() {
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
+    public Room(Integer roomID, String roomName, String roomDescription, String roomAddress, String roomType, Integer status01, Integer status02, Integer status03, Integer status04) {
+        RoomID = roomID;
+        RoomName = roomName;
+        RoomDescription = roomDescription;
+        RoomAddress = roomAddress;
+        RoomType = roomType;
+        this.status01 = status01;
+        this.status02 = status02;
+        this.status03 = status03;
+        this.status04 = status04;
     }
 
     public Integer getRoomID() {
@@ -62,14 +73,44 @@ public class Room {
         RoomAddress = roomAddress;
     }
 
-    public Room() {
+    public String getRoomType() {
+        return RoomType;
     }
 
-    public Room(Integer roomID, String roomName, String roomDescription, String roomAddress) {
-        RoomID = roomID;
-        RoomName = roomName;
-        RoomDescription = roomDescription;
-        RoomAddress = roomAddress;
+    public void setRoomType(String roomType) {
+        RoomType = roomType;
+    }
+
+    public Integer getStatus01() {
+        return status01;
+    }
+
+    public void setStatus01(Integer status01) {
+        this.status01 = status01;
+    }
+
+    public Integer getStatus02() {
+        return status02;
+    }
+
+    public void setStatus02(Integer status02) {
+        this.status02 = status02;
+    }
+
+    public Integer getStatus03() {
+        return status03;
+    }
+
+    public void setStatus03(Integer status03) {
+        this.status03 = status03;
+    }
+
+    public Integer getStatus04() {
+        return status04;
+    }
+
+    public void setStatus04(Integer status04) {
+        this.status04 = status04;
     }
 
     @Override
@@ -79,7 +120,11 @@ public class Room {
                 ", RoomName='" + RoomName + '\'' +
                 ", RoomDescription='" + RoomDescription + '\'' +
                 ", RoomAddress='" + RoomAddress + '\'' +
-                ", status=" + status +
+                ", RoomType='" + RoomType + '\'' +
+                ", status01=" + status01 +
+                ", status02=" + status02 +
+                ", status03=" + status03 +
+                ", status04=" + status04 +
                 '}';
     }
 }

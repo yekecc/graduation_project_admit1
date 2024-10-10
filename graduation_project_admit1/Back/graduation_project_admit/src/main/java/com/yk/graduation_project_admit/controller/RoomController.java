@@ -25,7 +25,8 @@ public class RoomController {
      * @param roomDto {
      *                "roomName": string,
      *                "roomDescription": string,
-     *                "roomAddress":string
+     *                "roomAddress":string,
+     *                "roomType":string
      *                }
      * @return
      */
@@ -36,7 +37,6 @@ public class RoomController {
     }
 
     /**
-     *
      * @param roomId
      * @return
      */

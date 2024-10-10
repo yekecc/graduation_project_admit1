@@ -21,7 +21,10 @@ public class RoomSerivice {
     public Room add(RoomDto roomDto) {
         Room roompojo = new Room();
         BeanUtils.copyProperties(roomDto, roompojo);
-        roompojo.setStatus(0);
+        roompojo.setStatus01(0);
+        roompojo.setStatus02(0);
+        roompojo.setStatus03(0);
+        roompojo.setStatus04(0);
         System.out.println("roomDto" + roomDto);
         return roomRepository.save(roompojo);
     }

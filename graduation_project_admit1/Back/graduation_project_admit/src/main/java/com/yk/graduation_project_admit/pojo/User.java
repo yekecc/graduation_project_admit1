@@ -21,6 +21,8 @@ public class User {
     private String office;
     @Column(name = "userNumber")
     private String userNumber;
+    @Column(name = "openid")
+    private String openid;
 
     public User() {
 
@@ -82,14 +84,12 @@ public class User {
         this.userNumber = userNumber;
     }
 
-    public User(Integer userID, String username, String password, String telephone, String userClass, String office, String userNumber) {
-        this.userID = userID;
-        this.username = username;
-        this.password = password;
-        this.telephone = telephone;
-        this.userClass = userClass;
-        this.office = office;
-        this.userNumber = userNumber;
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
     }
 
     @Override
@@ -102,6 +102,18 @@ public class User {
                 ", userClass='" + userClass + '\'' +
                 ", office='" + office + '\'' +
                 ", userNumber='" + userNumber + '\'' +
+                ", openid='" + openid + '\'' +
                 '}';
+    }
+
+    public User(Integer userID, String username, String password, String telephone, String userClass, String office, String userNumber, String openid) {
+        this.userID = userID;
+        this.username = username;
+        this.password = password;
+        this.telephone = telephone;
+        this.userClass = userClass;
+        this.office = office;
+        this.userNumber = userNumber;
+        this.openid = openid;
     }
 }
