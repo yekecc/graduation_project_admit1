@@ -1,24 +1,16 @@
 <script setup>
-import { ref, defineComponent, onMounted, computed } from 'vue';
-import axios from 'axios';
-import Class from './Class.vue';
-import { Form, Input, Button, Modal, InputNumber, Table } from 'ant-design-vue';
-import ClassData from '../../store/roomdata';
+import { onMounted, ref, computed } from 'vue';
 import { getRoom } from '../../api/RoomData';
-const fff = () => {
-    console.log('1111111111111111111111111')
-}
-const ssss = new ClassData();
-const classData = ref([]);
-
+import Class from './Class.vue';
+import room from '../../store/roomdata'
+const roomd = room()
 const RoomData = ref([]);
-const roomType = ref([]);
-
+import ClassData from '../../store/roomdata';
 const { updata } = ClassData();
-const handleClick = (e) => {
-    console.log(e.props.label);
-};
-
+const fff = () => {
+    console.log(fff)
+}
+const roomType = ref([]);
 onMounted(async () => {
     try {
         const res = await getRoom();
@@ -34,6 +26,7 @@ onMounted(async () => {
         console.error(error);
     }
 });
+
 
 const activeName = ref('first');
 const nameValue = ref('');
@@ -87,23 +80,24 @@ const handleFinish = (values) => {
 const ClassDataComputed = computed(() => {
     return ssss.data.value;
 });
+
+
 </script>
 
-
 <template>
-    <a-button type="primary" @click="showModal = true" style="margin: 10px;" v-on="fff">添加</a-button>
+    <a-button type="primary" @click="showModal = true" style="margin: 10px;">添加</a-button>
     <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane label='音乐室' name="first">
-            <Class />
+            <Class></Class>
         </el-tab-pane>
         <el-tab-pane label="美术室" name="second">
-            <Class />
+            <Class></Class>
         </el-tab-pane>
         <el-tab-pane label="教室" name="third">
-            <Class />
+            <Class></Class>
         </el-tab-pane>
         <el-tab-pane label="会议室" name="fourth">
-            <Class />
+            <Class></Class>
         </el-tab-pane>
     </el-tabs>
 
@@ -112,8 +106,13 @@ const ClassDataComputed = computed(() => {
             <a-form-item label="教室" name="name">
                 <a-input v-model:value="nameValue" />
             </a-form-item>
-            <a-form-item label="时间" name="time1">
-                <a-cascader v-model:value="timeValue" :options="options" placeholder="请选择时间段" />
+            <a-form-item label="地址" name="Address">
+                <a-input v-model:value="nameValue" />
+                <!-- <a-cascader v-model:value="timeValue" :options="options" placeholder="请选择时间段" /> -->
+            </a-form-item>
+            <a-form-item label="详细信息" name="Description">
+                <a-input v-model:value="nameValue" />
+                <!-- <a-cascader v-model:value="timeValue" :options="options" placeholder="请选择时间段" /> -->
             </a-form-item>
             <a-form-item label="类型" name="type">
                 <a-cascader v-model:value="typeValue" :options="typeOptions" placeholder="请选择类型" />
@@ -125,6 +124,4 @@ const ClassDataComputed = computed(() => {
     </a-modal>
 </template>
 
-
-
-<style></style>
+<style scoped></style>

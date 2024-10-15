@@ -26,16 +26,10 @@ const routes = [
                 title: '用户列表'
             }
         }, {
-            path: '/ClassList',
-            component: () => import('../view/Layout/ClassList.vue'),
+            path: '/ClassList1',
+            component: () => import('../view/Layout/ClassList1.vue'),
             meta: {
                 title: '课室列表'
-            }
-        }, {
-            path: '/Mine',
-            component: () => import('../view/Layout/Mine.vue'),
-            meta: {
-                title: '我的'
             }
         }]
     }
