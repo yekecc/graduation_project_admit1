@@ -1,4 +1,4 @@
-package com.yk.graduation_project_admit.serivice;
+package com.yk.graduation_project_admit.Service;
 
 import com.yk.graduation_project_admit.pojo.Room;
 
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RoomSerivice {
+public class RoomService {
     @Autowired
     RoomRepository roomRepository;
 
