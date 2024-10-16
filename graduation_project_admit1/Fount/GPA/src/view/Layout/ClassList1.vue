@@ -1,34 +1,52 @@
 <script setup>
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, watch } from 'vue';
 import { getRoom } from '../../api/RoomData';
 import Class from './Class.vue';
-import room from '../../store/roomdata'
-const roomd = room()
 const RoomData = ref([]);
 import ClassData from '../../store/roomdata';
+import _ from 'lodash';
 const { updata } = ClassData();
-const fff = () => {
-    console.log(fff)
-}
+
 const roomType = ref([]);
+// onMounted(async () => {
+//     try {
+//         const res = await getRoom();
+//         console.log("11111111111111111111111111111", res);
+//         console.log(res.data);
+//         RoomData.value = res.data.data;
+//         updata(RoomData.value);
+//         console.log(RoomData.value.length);
+
+//         roomType.value = [...new Set(RoomData.value.map(item => item.roomType))];
+//         console.log(roomType.value);
+//     } catch (error) {
+//         console.error(error);
+//     }
+// });
+
 onMounted(async () => {
     try {
         const res = await getRoom();
-        console.log("11111111111111111111111111111", res);
-        console.log(res.data);
         RoomData.value = res.data.data;
-        updata(RoomData.value);
-        console.log(RoomData.value.length);
-
-        roomType.value = [...new Set(RoomData.value.map(item => item.roomType))];
-        console.log(roomType.value);
     } catch (error) {
         console.error(error);
     }
 });
+const activeName = ref('');
+const groupedData = computed(() => {
+    const r = _(RoomData.value).groupBy('roomType').value();
+    if (Object.keys(r).length > 0) {
+        activeName.value = Object.keys(r)[0];
+    }
+    return r;
+});
 
-
-const activeName = ref('first');
+watch(activeName, function (new_value, old_value) {
+    if (new_value != '') {
+        updata(groupedData.value[new_value]);
+    }
+});
+// const activeName = ref('first');
 const nameValue = ref('');
 const timeValue = ref([]);
 const typeValue = ref([]);
@@ -78,14 +96,26 @@ const handleFinish = (values) => {
 };
 
 const ClassDataComputed = computed(() => {
+
     return ssss.data.value;
 });
+
+// const groupedRoomData = computed(() => {
+//     const groupedData = {};
+//     RoomData.value.forEach(item => {
+//         if (!groupedData[item.roomType]) {
+//             groupedData[item.roomType] = [];
+//         }
+//         groupedData[item.roomType].push(item);
+//     });
+//     return groupedData;
+// });
 
 
 </script>
 
 <template>
-    <a-button type="primary" @click="showModal = true" style="margin: 10px;">添加</a-button>
+    <!-- <a-button type="primary" @click="showModal = true" style="margin: 10px;">添加</a-button>
     <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane label='音乐室' name="first">
             <Class></Class>
@@ -99,7 +129,17 @@ const ClassDataComputed = computed(() => {
         <el-tab-pane label="会议室" name="fourth">
             <Class></Class>
         </el-tab-pane>
+    </el-tabs> -->
+    <a-button type="primary" @click="showModal = true" style="margin: 10px;" @tab-click="handleClick">添加</a-button>
+    <el-tabs v-model="activeName" class="demo-tabs">
+        <el-tab-pane :label="type" :name="type" v-for="type in Object.keys(groupedData)" :key="type"></el-tab-pane>
+        <!-- <div>{{ groupedData[activeName] }}</div> -->
+        <Class :dataSource="groupedData[activeName]" />
     </el-tabs>
+    <!-- <Class v-for="room in groupedData[activeName]" :key="room.roomID" :roomData="groupedData[activeName]" /> -->
+
+
+
 
     <a-modal v-model:visible="showModal" title="添加教室信息">
         <a-form :model="formState" @finish="handleFinish">

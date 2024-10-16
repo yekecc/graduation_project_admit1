@@ -1,5 +1,5 @@
 <template>
-    <a-table :columns="columns" :data-source="data" :scroll="{ x: 1300, y: 1000 }">
+    <a-table :columns="columns" :dataSource="data" :scroll="{ x: 1300, y: 1000 }">
         <template #bodyCell="{ column }">
             <template v-if="column.key === 'operation'">
                 <a-button type="primary" style="margin-right:8px ;">修改</a-button>
@@ -9,12 +9,14 @@
     </a-table>
 </template>
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import ClassData from '../../store/roomdata';
-
+const data = ref([]);
 const ClassData1 = new ClassData();
-
-const data = ref([])
+// const props = defineProps({ rd: Object });
+// watch(props.rd, (n, o) => {
+//     console.log(n, o);
+// });
 // onMounted(() => {
 //     console.log('111', ClassData1.data)
 //     data.value = ClassData1.data
@@ -22,7 +24,8 @@ const data = ref([])
 // })
 // const data = ref([])
 onMounted(() => {
-    console.log('22222222222222222222', ClassData1.data)
+    // console.log('22222222222222222222', ClassData1.data)
+    // ClassData1.updata(props.rd);
     data.value = ClassData1.data
     data.value = ClassData1.data.map(item => ({
         ...item,
@@ -96,6 +99,14 @@ const columns = [
         width: 170,
     },
 ];
+// export default {
+//     props: {
+//         'lxy': {
+//             type: Object,
+//             default: []
+//         }
+//     }
+// }
 
 // export { };
 </script>
