@@ -2,7 +2,7 @@ package com.yk.graduation_project_admit.controller;
 
 import com.yk.graduation_project_admit.pojo.User;
 import com.yk.graduation_project_admit.pojo.dto.admit_login_dto;
-import com.yk.graduation_project_admit.serivice.AdmitSerivice;
+import com.yk.graduation_project_admit.Service.AdmitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +14,12 @@ import java.util.Optional;
 @RequestMapping("/login")
 public class LoginController {
     @Autowired
-    AdmitSerivice admitSerivice = new AdmitSerivice();
+    AdmitService admitService = new AdmitService();
 
     @PostMapping     //url:localhost:8080/login
     public ResponseEntity<User> login(@RequestBody admit_login_dto loginDto) {
 
-        Optional<User> UserOptional = admitSerivice.getAdmit(loginDto.getUserNumber());
+        Optional<User> UserOptional = admitService.getAdmit(loginDto.getUserNumber());
         if (UserOptional.isPresent()) {
             User user = UserOptional.get();
             // 验证密码

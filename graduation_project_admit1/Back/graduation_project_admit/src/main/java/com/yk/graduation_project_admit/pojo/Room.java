@@ -1,9 +1,15 @@
 package com.yk.graduation_project_admit.pojo;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "tb_room")
+@Data
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,62 +21,16 @@ public class Room {
     private String RoomDescription;
     @Column(name = "room_address")
     private String RoomAddress;
-    @Column(name = "room_status", columnDefinition = "INTEGER DEFAULT 0 ")
-    private Integer status;
-
-    public Room(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getRoomID() {
-        return RoomID;
-    }
-
-    public void setRoomID(Integer roomID) {
-        RoomID = roomID;
-    }
-
-    public String getRoomName() {
-        return RoomName;
-    }
-
-    public void setRoomName(String roomName) {
-        RoomName = roomName;
-    }
-
-    public String getRoomDescription() {
-        return RoomDescription;
-    }
-
-    public void setRoomDescription(String roomDescription) {
-        RoomDescription = roomDescription;
-    }
-
-    public String getRoomAddress() {
-        return RoomAddress;
-    }
-
-    public void setRoomAddress(String roomAddress) {
-        RoomAddress = roomAddress;
-    }
-
-    public Room() {
-    }
-
-    public Room(Integer roomID, String roomName, String roomDescription, String roomAddress) {
-        RoomID = roomID;
-        RoomName = roomName;
-        RoomDescription = roomDescription;
-        RoomAddress = roomAddress;
-    }
+    @Column(name = "room_type")
+    private String RoomType;
+    @Column(name = "room_status01", columnDefinition = "INTEGER DEFAULT 0 ")
+    private Integer status01;
+    @Column(name = "room_status02", columnDefinition = "INTEGER DEFAULT 0 ")
+    private Integer status02;
+    @Column(name = "room_status03", columnDefinition = "INTEGER DEFAULT 0 ")
+    private Integer status03;
+    @Column(name = "room_status04", columnDefinition = "INTEGER DEFAULT 0 ")
+    private Integer status04;
 
     @Override
     public String toString() {
@@ -79,7 +39,26 @@ public class Room {
                 ", RoomName='" + RoomName + '\'' +
                 ", RoomDescription='" + RoomDescription + '\'' +
                 ", RoomAddress='" + RoomAddress + '\'' +
-                ", status=" + status +
+                ", RoomType='" + RoomType + '\'' +
+                ", status01=" + status01 +
+                ", status02=" + status02 +
+                ", status03=" + status03 +
+                ", status04=" + status04 +
                 '}';
+    }
+
+    public Room() {
+    }
+
+    public Room(Integer roomID, String roomName, String roomDescription, String roomAddress, String roomType, Integer status01, Integer status02, Integer status03, Integer status04) {
+        RoomID = roomID;
+        RoomName = roomName;
+        RoomDescription = roomDescription;
+        RoomAddress = roomAddress;
+        RoomType = roomType;
+        this.status01 = status01;
+        this.status02 = status02;
+        this.status03 = status03;
+        this.status04 = status04;
     }
 }
