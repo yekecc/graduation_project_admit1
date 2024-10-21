@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref, computed, watch } from 'vue';
-import { getRoom } from '../../api/RoomData';
+import { getRoom, updateRoom } from '../../api/RoomData';
 import Class from './Class.vue';
 const RoomData = ref([]);
 import ClassData from '../../store/roomdata';
@@ -8,22 +8,8 @@ import _ from 'lodash';
 const { updata } = ClassData();
 
 const roomType = ref([]);
-// onMounted(async () => {
-//     try {
-//         const res = await getRoom();
-//         console.log("11111111111111111111111111111", res);
-//         console.log(res.data);
-//         RoomData.value = res.data.data;
-//         updata(RoomData.value);
-//         console.log(RoomData.value.length);
 
-//         roomType.value = [...new Set(RoomData.value.map(item => item.roomType))];
-//         console.log(roomType.value);
-//     } catch (error) {
-//         console.error(error);
-//     }
-// });
-
+const key = ref(0);
 onMounted(async () => {
     try {
         const res = await getRoom();
@@ -41,32 +27,39 @@ const groupedData = computed(() => {
     return r;
 });
 
+watch(activeName, (newVal, oldVal) => {
+    if (newVal !== '') {
+        updata(groupedData.value[newVal]);
+    }
+});
+
 watch(activeName, function (new_value, old_value) {
     if (new_value != '') {
         updata(groupedData.value[new_value]);
     }
 });
-// const activeName = ref('first');
 const nameValue = ref('');
 const timeValue = ref([]);
 const typeValue = ref([]);
+const addressValue = ref('');
+const descriptionValue = ref('');
 const showModal = ref(false);
 
-const options = [
-    {
-        value: '8:30-9:50',
-        label: '8:30-9:50',
-    }, {
-        value: '10:10-11:30',
-        label: '10:10-11:30',
-    }, {
-        value: '13:50-15:10',
-        label: '13:50-15:10',
-    }, {
-        value: '15:20-16:40',
-        label: '15:20-16:40',
-    }
-];
+// const options = [
+//     {
+//         value: '8:30-9:50',
+//         label: '8:30-9:50',
+//     }, {
+//         value: '10:10-11:30',
+//         label: '10:10-11:30',
+//     }, {
+//         value: '13:50-15:10',
+//         label: '13:50-15:10',
+//     }, {
+//         value: '15:20-16:40',
+//         label: '15:20-16:40',
+//     }
+// ];
 
 const typeOptions = [
     {
@@ -85,81 +78,63 @@ const typeOptions = [
 ];
 
 const formState = ref({
-    name: '',
-    time1: '',
-    number1: 0,
+    roomName: '',
+    roomAddress: '',
+    roomDescription: '',
+    roomType: '',
 });
 
-const handleFinish = (values) => {
-    classData.value.push(values);
-    showModal.value = false;
+const handleTabClick = (tab) => {
+    console.log(tab);
 };
 
 const ClassDataComputed = computed(() => {
-
     return ssss.data.value;
 });
 
-// const groupedRoomData = computed(() => {
-//     const groupedData = {};
-//     RoomData.value.forEach(item => {
-//         if (!groupedData[item.roomType]) {
-//             groupedData[item.roomType] = [];
-//         }
-//         groupedData[item.roomType].push(item);
-//     });
-//     return groupedData;
-// });
+const handleOk = async () => {
+    formState.value.roomType = formState.value.roomType[formState.value.roomType.length - 1];
+    console.log('11111111111', formState.value);
+    const res = await updateRoom(formState.value);
+    console.log('res', res);
+    formState.value = {
+        roomName: '',
+        roomAddress: '',
+        roomDescription: '',
+        roomType: '',
+    };
+
+    showModal.value = false;
+};
+
 
 
 </script>
 
 <template>
-    <!-- <a-button type="primary" @click="showModal = true" style="margin: 10px;">添加</a-button>
-    <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
-        <el-tab-pane label='音乐室' name="first">
-            <Class></Class>
-        </el-tab-pane>
-        <el-tab-pane label="美术室" name="second">
-            <Class></Class>
-        </el-tab-pane>
-        <el-tab-pane label="教室" name="third">
-            <Class></Class>
-        </el-tab-pane>
-        <el-tab-pane label="会议室" name="fourth">
-            <Class></Class>
-        </el-tab-pane>
-    </el-tabs> -->
-    <a-button type="primary" @click="showModal = true" style="margin: 10px;" @tab-click="handleClick">添加</a-button>
-    <el-tabs v-model="activeName" class="demo-tabs">
+    <a-button type="primary" @click="showModal = true" style="margin: 10px;">添加</a-button>
+    <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleTabClick">
         <el-tab-pane :label="type" :name="type" v-for="type in Object.keys(groupedData)" :key="type"></el-tab-pane>
-        <!-- <div>{{ groupedData[activeName] }}</div> -->
-        <Class :dataSource="groupedData[activeName]" />
+        <Class :key="activeName" :dataSource="groupedData[activeName]" />
     </el-tabs>
-    <!-- <Class v-for="room in groupedData[activeName]" :key="room.roomID" :roomData="groupedData[activeName]" /> -->
 
-
-
-
-    <a-modal v-model:visible="showModal" title="添加教室信息">
+    <a-modal v-model:visible="showModal" title="添加教室信息" @ok="handleOk">
         <a-form :model="formState" @finish="handleFinish">
             <a-form-item label="教室" name="name">
-                <a-input v-model:value="nameValue" />
+                <a-input v-model:value="formState.roomName" />
             </a-form-item>
             <a-form-item label="地址" name="Address">
-                <a-input v-model:value="nameValue" />
-                <!-- <a-cascader v-model:value="timeValue" :options="options" placeholder="请选择时间段" /> -->
+                <a-input v-model:value="formState.roomAddress" />
             </a-form-item>
             <a-form-item label="详细信息" name="Description">
-                <a-input v-model:value="nameValue" />
-                <!-- <a-cascader v-model:value="timeValue" :options="options" placeholder="请选择时间段" /> -->
+                <a-input v-model:value="formState.roomDescription" />
             </a-form-item>
             <a-form-item label="类型" name="type">
-                <a-cascader v-model:value="typeValue" :options="typeOptions" placeholder="请选择类型" />
+                <a-cascader v-model:value="formState.roomType" :options="typeOptions" placeholder="请选择类型" />
             </a-form-item>
-            <a-form-item>
+            <!-- <a-form-item>
                 <a-button type="primary" html-type="submit">提交</a-button>
-            </a-form-item>
+            </a-form-item> -->
         </a-form>
     </a-modal>
 </template>
