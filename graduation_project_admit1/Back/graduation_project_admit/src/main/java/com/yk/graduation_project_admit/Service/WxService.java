@@ -3,7 +3,9 @@ package com.yk.graduation_project_admit.Service;
 
 import cn.hutool.json.JSONUtil;
 import com.yk.graduation_project_admit.pojo.User;
+import com.yk.graduation_project_admit.pojo.dto.UserDto;
 import com.yk.graduation_project_admit.repository.UserRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +15,12 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class WxService {
+    private final String appid = "wx3b2dd66cfe6d8d9b";
+    private final String appsecret = "8032ae51432227662a9bb6b8009d8363";
     @Autowired
     RestTemplate restTemplate;
-
     @Autowired
     UserRepository userRepository;
-
-    private String appid = "wx3b2dd66cfe6d8d9b";
-    private String appsecret = "8032ae51432227662a9bb6b8009d8363";
     private String code;
 
 
@@ -50,5 +50,15 @@ public class WxService {
         User user = new User();
         user = userRepository.findByOpenid(openid);
         return user;
+    }
+
+    public User addUser(UserDto user) {
+        User user1 = new User();
+        BeanUtils.copyProperties(user, user1);
+        return userRepository.save(user1);
+    }
+
+    public void updateUser(String openid, User user) {
+
     }
 }
