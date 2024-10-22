@@ -2,10 +2,12 @@ package com.yk.graduation_project_admit.controller;
 
 import cn.hutool.json.JSONObject;
 import com.yk.graduation_project_admit.Service.WxService;
+import com.yk.graduation_project_admit.pojo.Borrow;
 import com.yk.graduation_project_admit.pojo.ResponseMessage;
 import com.yk.graduation_project_admit.pojo.User;
 import com.yk.graduation_project_admit.pojo.dto.BorrowDto;
 import com.yk.graduation_project_admit.pojo.dto.UserDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +45,14 @@ public class WxController {
         return ResponseMessage.success(wxService.addUser(user));
     }
 
-    public void getRoomCode(BorrowDto borrowDto) {
-
+    /**
+     * @param borrowDto
+     * @return
+     */
+    @PostMapping("/getRoomCode")
+    public ResponseMessage getRoomCode(BorrowDto borrowDto) {
+        Borrow borrow = new Borrow();
+        BeanUtils.copyProperties(borrowDto, borrow);
+        return ResponseMessage.success(wxService.addlog(borrowDto));
     }
 }

@@ -2,8 +2,11 @@ package com.yk.graduation_project_admit.Service;
 
 
 import cn.hutool.json.JSONUtil;
+import com.yk.graduation_project_admit.pojo.Borrow;
 import com.yk.graduation_project_admit.pojo.User;
+import com.yk.graduation_project_admit.pojo.dto.BorrowDto;
 import com.yk.graduation_project_admit.pojo.dto.UserDto;
+import com.yk.graduation_project_admit.repository.BorrowRepository;
 import com.yk.graduation_project_admit.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,8 @@ public class WxService {
     RestTemplate restTemplate;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    BorrowRepository borrowRepository;
     private String code;
 
 
@@ -60,5 +65,11 @@ public class WxService {
 
     public void updateUser(String openid, User user) {
 
+    }
+
+    public Borrow addlog(BorrowDto borrowDto) {
+        Borrow borrow = new Borrow();
+        BeanUtils.copyProperties(borrowDto, borrow);
+        return borrowRepository.save(borrow);
     }
 }
