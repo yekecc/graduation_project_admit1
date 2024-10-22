@@ -28,7 +28,10 @@ public class WxService {
     BorrowRepository borrowRepository;
     private String code;
 
-
+    /**
+     * @param code
+     * @return openid session_key
+     */
     public String getUserpro(String code) {
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code ";
         url = url.replace("APPID", appid);
@@ -51,22 +54,37 @@ public class WxService {
         return responseBody;
     }
 
+    /**
+     * @param openid
+     * @return user
+     */
     public User getUser(String openid) {
         User user = new User();
         user = userRepository.findByOpenid(openid);
         return user;
     }
 
+    /**
+     * @param user
+     * @return user
+     */
     public User addUser(UserDto user) {
         User user1 = new User();
         BeanUtils.copyProperties(user, user1);
         return userRepository.save(user1);
     }
 
+    /**
+     * @param openid
+     * @param user
+     */
     public void updateUser(String openid, User user) {
-
     }
 
+    /**
+     * @param borrowDto
+     * @return Borrow
+     */
     public Borrow addlog(BorrowDto borrowDto) {
         Borrow borrow = new Borrow();
         BeanUtils.copyProperties(borrowDto, borrow);

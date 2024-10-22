@@ -5,6 +5,7 @@ import com.yk.graduation_project_admit.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,4 +22,7 @@ public class AdmitService {
         return UserRepository.findByUsername(userNumber);
     }
 
+    public List<User> getAllUser() {
+        return (List<User>) UserRepository.findAll();
+    }
 }

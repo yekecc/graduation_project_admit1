@@ -1,8 +1,9 @@
 package com.yk.graduation_project_admit.controller;
 
+import com.yk.graduation_project_admit.Service.AdmitService;
+import com.yk.graduation_project_admit.pojo.ResponseMessage;
 import com.yk.graduation_project_admit.pojo.User;
 import com.yk.graduation_project_admit.pojo.dto.admit_login_dto;
-import com.yk.graduation_project_admit.Service.AdmitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/login")
-public class LoginController {
+@RequestMapping("/admit")
+public class AdmitController {
     @Autowired
-    AdmitService admitService = new AdmitService();
+    AdmitService admitService;
 
-    @PostMapping     //url:localhost:8080/login
+    @PostMapping("/login")   //url:localhost:8080/login
     public ResponseEntity<User> login(@RequestBody admit_login_dto loginDto) {
 
         Optional<User> UserOptional = admitService.getAdmit(loginDto.getUserNumber());
@@ -34,5 +35,10 @@ public class LoginController {
             // 用户不存在
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 明确返回 null 用户对象
         }
+    }
+
+    @GetMapping("/getAllUser")
+    public ResponseMessage getAllUser() {
+        return ResponseMessage.success(admitService.getAllUser());
     }
 }
