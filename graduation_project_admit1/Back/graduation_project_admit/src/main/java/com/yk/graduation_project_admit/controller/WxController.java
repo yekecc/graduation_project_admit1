@@ -49,10 +49,28 @@ public class WxController {
      * @param borrowDto
      * @return
      */
-    @PostMapping("/getRoomCode")
-    public ResponseMessage getRoomCode(BorrowDto borrowDto) {
+    @PostMapping("/getRoomLog")
+    public ResponseMessage getRoomLog(BorrowDto borrowDto) {
         Borrow borrow = new Borrow();
         BeanUtils.copyProperties(borrowDto, borrow);
         return ResponseMessage.success(wxService.addlog(borrowDto));
     }
+
+    /**
+     * @param borrowDto
+     * @return
+     */
+    @PostMapping("/verifyLog")
+    public ResponseMessage verifyLog(BorrowDto borrowDto) {
+        Borrow borrow = new Borrow();
+        BeanUtils.copyProperties(borrowDto, borrow);
+        return ResponseMessage.success(wxService.verifycode(borrow.getOpenid(),
+                borrow.getRoomID(),
+                borrow.getStatus01(),
+                borrow.getStatus02(),
+                borrow.getStatus03(),
+                borrow.getStatus04()));
+
+    }
+
 }

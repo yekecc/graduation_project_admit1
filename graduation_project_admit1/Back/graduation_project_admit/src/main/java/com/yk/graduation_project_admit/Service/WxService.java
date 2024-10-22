@@ -90,4 +90,8 @@ public class WxService {
         BeanUtils.copyProperties(borrowDto, borrow);
         return borrowRepository.save(borrow);
     }
+
+    public Borrow verifycode(String openid, Integer roomID, Integer status01, Integer status02, Integer status03, Integer status04) {
+        return borrowRepository.findBorrowByOpenidAndRoomIDAndStatus01AndStatus02AndStatus03AndStatus04(openid, roomID, status01, status02, status03, status04);
+    }
 }
