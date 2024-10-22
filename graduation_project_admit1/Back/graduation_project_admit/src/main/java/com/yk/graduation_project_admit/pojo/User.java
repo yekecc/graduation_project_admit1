@@ -1,15 +1,16 @@
 package com.yk.graduation_project_admit.pojo;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Setter
 @Getter
 @Table(name = "tb_user")
 @Entity
-@Data
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,20 +30,6 @@ public class User {
     private String userNumber;
     @Column(name = "openid")
     private String openid;
-
-    public User() {
-    }
-
-    public User(Integer userID, String username, String password, String telephone, String userClass, String office, String userNumber, String openid) {
-        this.userID = userID;
-        this.username = username;
-        this.password = password;
-        this.telephone = telephone;
-        this.userClass = userClass;
-        this.office = office;
-        this.userNumber = userNumber;
-        this.openid = openid;
-    }
 
     @Override
     public String toString() {

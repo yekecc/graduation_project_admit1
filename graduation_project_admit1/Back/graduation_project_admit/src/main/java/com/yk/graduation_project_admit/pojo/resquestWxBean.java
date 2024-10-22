@@ -1,12 +1,12 @@
 package com.yk.graduation_project_admit.pojo;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Setter
 @Getter
-@Data
 public class resquestWxBean {
     private String openid;
     private String session_key;

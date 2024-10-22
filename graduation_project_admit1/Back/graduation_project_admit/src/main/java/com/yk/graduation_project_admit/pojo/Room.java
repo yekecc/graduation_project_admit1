@@ -1,15 +1,16 @@
 package com.yk.graduation_project_admit.pojo;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Setter
 @Getter
 @Entity
 @Table(name = "tb_room")
-@Data
+
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,18 +48,4 @@ public class Room {
                 '}';
     }
 
-    public Room() {
-    }
-
-    public Room(Integer roomID, String roomName, String roomDescription, String roomAddress, String roomType, Integer status01, Integer status02, Integer status03, Integer status04) {
-        RoomID = roomID;
-        RoomName = roomName;
-        RoomDescription = roomDescription;
-        RoomAddress = roomAddress;
-        RoomType = roomType;
-        this.status01 = status01;
-        this.status02 = status02;
-        this.status03 = status03;
-        this.status04 = status04;
-    }
 }
