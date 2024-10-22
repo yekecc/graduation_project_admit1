@@ -4,8 +4,8 @@ import cn.hutool.json.JSONObject;
 import com.yk.graduation_project_admit.Service.WxService;
 import com.yk.graduation_project_admit.pojo.ResponseMessage;
 import com.yk.graduation_project_admit.pojo.User;
+import com.yk.graduation_project_admit.pojo.dto.BorrowDto;
 import com.yk.graduation_project_admit.pojo.dto.UserDto;
-import com.yk.graduation_project_admit.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +19,7 @@ public class WxController {
 
     /**
      * @param code
-     * @return JSONObject{
-     * openid:string;
-     * session_key:string
-     * }
+     * @return ResponseMessage
      */
     @PostMapping("/login")
     public ResponseMessage userLogin(String code) {
@@ -38,17 +35,15 @@ public class WxController {
     }
 
     /**
-     *
      * @param user
-     * @return
+     * @return ResponseMessage
      */
     @PostMapping("/updateUser")
     public ResponseMessage userLogin(UserDto user) {
         return ResponseMessage.success(wxService.addUser(user));
     }
 
-    public void getRoomCode() {
-
+    public void getRoomCode(BorrowDto borrowDto) {
 
     }
 }
