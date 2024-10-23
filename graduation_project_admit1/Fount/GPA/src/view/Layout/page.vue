@@ -5,6 +5,7 @@ import {
   UserOutlined,
   TeamOutlined,
   FileOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons-vue';
 import { defineComponent, ref } from 'vue';
 
@@ -14,7 +15,13 @@ const router = useRouter()
 const routes = computed(() => {
   return router.options.routes[1].children
 })
-console.log(router.options.routes[1].children)
+// console.log(router.options.routes[1].children)
+
+const logout = () => {
+  localStorage.removeItem('user')
+  router.push({ path: '/login' })
+}
+
 </script>
 <template>
   <a-layout style="min-height: 100vh">
@@ -25,6 +32,12 @@ console.log(router.options.routes[1].children)
           <router-link :to="r.path">
             <span>{{ r.meta.title }}</span>
           </router-link>
+        </a-menu-item>
+      </a-menu>
+      <a-menu theme="dark" mode="inline" class="logout-menu">
+        <a-menu-item key="logout" @click="logout">
+          <logout-outlined />
+          <span>退出登录</span>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
@@ -47,6 +60,12 @@ console.log(router.options.routes[1].children)
   height: 32px;
   margin: 16px;
   background: rgba(255, 255, 255, 0.3);
+}
+
+.logout-menu {
+  position: absolute;
+  bottom: 50px;
+  width: 100%;
 }
 
 .site-layout .site-layout-background {

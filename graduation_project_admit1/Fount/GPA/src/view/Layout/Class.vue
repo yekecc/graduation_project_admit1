@@ -1,11 +1,3 @@
-<!-- <a-table :columns="columns" :dataSource="data" :scroll="{ x: 1300, y: 1000 }">
-        <template #bodyCell="{ column }">
-            <template v-if="column.key === 'operation'">
-                <a-button type="primary" style="margin-right:8px ;">修改</a-button>
-                <a-button type="primary">删除</a-button>
-            </template>
-</template>
-</a-table> -->
 <template>
     <div class="table-container">
         <div class="table">
@@ -25,8 +17,8 @@
                 </template>
                 <div>
                     <div class="edit-buttons">
-                        <button>修改</button>
-                        <button @click="deleteRoom(room.roomID)">删除</button>
+                        <!-- <button @click="editRoom(room.roomID)">修改</button> -->
+                        <button @click="handleDeleteRoom(room.roomID)">删除</button>
                     </div>
                 </div>
             </div>
@@ -38,18 +30,28 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue';
 import ClassData from '../../store/roomdata';
+import { deleteRoom } from '../../api/RoomData';
 
 const data = ref([]);
 const ClassData1 = new ClassData();
 
 const times = ['8:30-9:50', '10:10-11:30', '13:50-15:10', '15:20-16:40']
 
-const deleteRoom = (roomID) => {
-    console.log('111', roomID)
-    data.value = data.value.filter(item => item.roomID !== roomID)
+const handleDeleteRoom = async (roomID) => {
+    try {
 
+        const res = await deleteRoom(roomID)
+        console.log('删除成功', res);
+        data.value = data.value.filter(item => item.roomID !== roomID)
+
+    } catch (error) {
+        console.log('555', error);
+    }
 }
 
+// const editRoom = (roomID) => {
+//     console.log('666', roomID);
+// }
 // const props = defineProps({ rd: Object });
 // watch(props.rd, (n, o) => {
 //     console.log(n, o);
@@ -184,12 +186,19 @@ onMounted(() => {
     background-color: #ccc;
 }
 
-.table-header>div,
+.table-header>div {
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    line-height: 50px;
+}
+
 .table-row>div {
     padding: 8px;
     background-color: #fff;
-    border: 1px solid #ccc;
+    /* border-bottom: 1px solid #ccc; */
     text-align: center;
+    line-height: 25px;
 }
 
 .table-header>div:first-child,
@@ -222,15 +231,16 @@ onMounted(() => {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    width: 150px;
+    width: 80px;
 }
 
 .edit-buttons button {
-    margin-left: 4px;
+    /* margin-left: 4px;*/
     padding: 4px 8px;
+    align-items: center;
     border: none;
     background-color: #f9f9f9;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .edit-buttons button:first-child {

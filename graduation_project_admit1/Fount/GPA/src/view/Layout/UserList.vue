@@ -1,5 +1,5 @@
 <template>
-    <a-table :data-source="data" :columns="columns">
+    <a-table :data-source="userData" :columns="columns">
         <template #filterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
             <div style="padding: 8px">
                 <a-input ref="searchInput" :placeholder="`Search ${column.dataIndex}`" :value="selectedKeys[0]"
@@ -42,133 +42,118 @@
         </template>
     </a-table>
 </template>
-<script>
+<script setup>
 import { SearchOutlined } from '@ant-design/icons-vue';
-import { defineComponent, reactive, ref, toRefs } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
+import { getUser } from '../../api/User';
+
+const state = reactive({
+    searchText: '',
+    searchedColumn: '',
+})
+
+const searchInput = ref(null)
+
+const userData = ref([])
+
+onMounted(async () => {
+    try {
+        const res = await getUser()
+        userData.value = res.data.data
+        console.log(userData.value)
+    } catch (error) {
+        console.error('获取用户数据失败:', error)
+    }
+})
+
 const data = [
     {
         key: '1',
-        name: '傻逼',
-        Student_Number: 2206030000,
-        Class_and_Grade: '2022级计算机应用技术E班',
+        username: '傻逼',
+        userNumber: 2206030000,
+        userClass: '2022级计算机应用技术E班',
+    }
+];
+
+const columns = [
+    {
+        title: '姓名',
+        dataIndex: 'username',
+        key: 'username',
+        slots: {
+            filterDropdown: 'filterDropdown',
+            filterIcon: 'filterIcon',
+            customRender: 'customRender',
+        },
+        onFilter: (value, record) =>
+            record.username.toString().toLowerCase().includes(value.toLowerCase()),
+        onFilterDropdownVisibleChange: visible => {
+            if (visible) {
+                setTimeout(() => {
+                    console.log(searchInput.value);
+                    searchInput.value.focus();
+                }, 100);
+            }
+        },
     },
     {
-        key: '2',
-        name: '嗦嗨',
-        Student_Number: 2206030000,
-        Class_and_Grade: '2022级计算机应用技术E班',
+        title: '学号',
+        dataIndex: 'userNumber',
+        key: 'userNumber',
+        slots: {
+            filterDropdown: 'filterDropdown',
+            filterIcon: 'filterIcon',
+            customRender: 'customRender',
+        },
+        onFilter: (value, record) =>
+            record.userNumber.toString().toLowerCase().includes(value.toLowerCase()),
+        onFilterDropdownVisibleChange: visible => {
+            if (visible) {
+                setTimeout(() => {
+                    searchInput.value.focus();
+                }, 100);
+            }
+        },
     },
     {
-        key: '3',
-        name: '海绵宝宝',
-        Student_Number: 2206030000,
-        Class_and_Grade: '2022级计算机应用技术E班',
+        title: '班级',
+        dataIndex: 'userClass',
+        key: 'userClass',
+        slots: {
+            filterDropdown: 'filterDropdown',
+            filterIcon: 'filterIcon',
+            customRender: 'customRender',
+        },
+        onFilter: (value, record) =>
+            record.userClass.toString().toLowerCase().includes(value.toLowerCase()),
+        onFilterDropdownVisibleChange: visible => {
+            if (visible) {
+                setTimeout(() => {
+                    searchInput.value.focus();
+                }, 100);
+            }
+        },
     },
     {
-        key: '4',
-        name: '派大星',
-        Student_Number: 2206030000,
-        Class_and_Grade: '2022级计算机应用技术E班',
+        title: '编辑',
+        key: 'operation',
+        fixed: 'right',
+        width: 200,
+        slots: {
+            customRender: 'action',
+        },
     },
 ];
-export default defineComponent({
-    components: {
-        SearchOutlined,
-    },
-    setup() {
-        const state = reactive({
-            searchText: '',
-            searchedColumn: '',
-        });
-        const searchInput = ref();
-        const columns = [
-            {
-                title: '姓名',
-                dataIndex: 'name',
-                key: 'name',
-                slots: {
-                    filterDropdown: 'filterDropdown',
-                    filterIcon: 'filterIcon',
-                    customRender: 'customRender',
-                },
-                onFilter: (value, record) =>
-                    record.name.toString().toLowerCase().includes(value.toLowerCase()),
-                onFilterDropdownVisibleChange: visible => {
-                    if (visible) {
-                        setTimeout(() => {
-                            console.log(searchInput.value);
-                            searchInput.value.focus();
-                        }, 100);
-                    }
-                },
-            },
-            {
-                title: '学号',
-                dataIndex: 'Student_Number',
-                key: 'Student_Number',
-                slots: {
-                    filterDropdown: 'filterDropdown',
-                    filterIcon: 'filterIcon',
-                    customRender: 'customRender',
-                },
-                onFilter: (value, record) =>
-                    record.age.toString().toLowerCase().includes(value.toLowerCase()),
-                onFilterDropdownVisibleChange: visible => {
-                    if (visible) {
-                        setTimeout(() => {
-                            searchInput.value.focus();
-                        }, 100);
-                    }
-                },
-            },
-            {
-                title: '班级',
-                dataIndex: 'Class_and_Grade',
-                key: 'Class_and_Grade',
-                slots: {
-                    filterDropdown: 'filterDropdown',
-                    filterIcon: 'filterIcon',
-                    customRender: 'customRender',
-                },
-                onFilter: (value, record) =>
-                    record.address.toString().toLowerCase().includes(value.toLowerCase()),
-                onFilterDropdownVisibleChange: visible => {
-                    if (visible) {
-                        setTimeout(() => {
-                            searchInput.value.focus();
-                        }, 100);
-                    }
-                },
-            },
-            {
-                title: '编辑',
-                key: 'operation',
-                fixed: 'right',
-                width: 200,
-                slots: {
-                    customRender: 'action',
-                },
-            },
-        ];
-        const handleSearch = (selectedKeys, confirm, dataIndex) => {
-            confirm();
-            state.searchText = selectedKeys[0];
-            state.searchedColumn = dataIndex;
-        };
-        const handleReset = clearFilters => {
-            clearFilters();
-            state.searchText = '';
-        };
-        return {
-            data,
-            columns,
-            handleSearch,
-            handleReset,
-            searchInput,
-            ...toRefs(state),
-        };
-    },
-});
+
+const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    state.searchText = selectedKeys[0];
+    state.searchedColumn = dataIndex;
+};
+const handleReset = clearFilters => {
+    clearFilters();
+    state.searchText = '';
+};
 </script>
 <style scoped>
 .highlight {

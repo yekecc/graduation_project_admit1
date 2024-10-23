@@ -19,3 +19,11 @@ export function updateRoom(data) {
         data
     })
 }
+
+export function deleteRoom(data) {
+    return service({
+        method: 'delete',
+        url: `/room?roomId=${data}`,
+
+    })
+}
