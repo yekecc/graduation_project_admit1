@@ -3,6 +3,8 @@ package com.yk.graduation_project_admit.pojo;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Date;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,8 +23,6 @@ public class Borrow {
     private Integer RoomID;
     @Column(name = "b_roomName")
     private String RoomName;
-    @Column(name = "b_roomDescription")
-    private String RoomDescription;
     @Column(name = "b_roomAddress")
     private String RoomAddress;
     @Column(name = "b_roomType")
@@ -35,5 +35,8 @@ public class Borrow {
     private Integer status03;
     @Column(name = "b_status04")
     private Integer status04;
-
+    @Column(name = "b_time")
+    private Date bTime;
+    @Column(name = "b_useTo")
+    private String useTo;
 }

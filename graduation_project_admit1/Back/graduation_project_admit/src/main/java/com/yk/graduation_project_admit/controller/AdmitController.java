@@ -39,6 +39,10 @@ public class AdmitController {
 
     @GetMapping("/getAllUser")
     public ResponseMessage getAllUser() {
-        return ResponseMessage.success(admitService.getAllUser());
+        if (admitService.getAllUser() != null) {
+            return ResponseMessage.success(admitService.getAllUser());
+        } else {
+            return ResponseMessage.fail("获取失败");
+        }
     }
 }

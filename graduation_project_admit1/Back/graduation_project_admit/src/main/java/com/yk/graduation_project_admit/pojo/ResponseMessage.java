@@ -1,6 +1,5 @@
 package com.yk.graduation_project_admit.pojo;
 
-import cn.hutool.json.JSONObject;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 
@@ -20,6 +19,10 @@ public class ResponseMessage<T> {
 
     public static <T> ResponseMessage<T> success() {
         return new ResponseMessage<>(HttpStatus.OK.value(), "success", null);
+    }
+
+    public static ResponseMessage fail(String message) {
+        return new ResponseMessage<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), message, null);
     }
 
     @Override
