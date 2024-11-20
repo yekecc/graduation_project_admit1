@@ -1,12 +1,11 @@
 package com.yk.graduation_project_admit.pojo;
 
-import com.yk.graduation_project_admit.pojo.Reservation;
-import com.yk.graduation_project_admit.pojo.User;
+
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 
