@@ -75,9 +75,9 @@ public class AdmitService {
         Map<String, Object> statistics = new HashMap<>();
 
         List<Reservation> approvedReservations = reservationRepository
-                .findByDateRangeAndStatus(startDate, endDate, 1);
+                .findByReservationDateBetweenAndStatus(startDate, endDate, 1);
         List<Reservation> rejectedReservations = reservationRepository
-                .findByDateRangeAndStatus(startDate, endDate, 2);
+                .findByReservationDateBetweenAndStatus(startDate, endDate, 2);
 
         statistics.put("totalApproved", approvedReservations.size());
         statistics.put("totalRejected", rejectedReservations.size());
