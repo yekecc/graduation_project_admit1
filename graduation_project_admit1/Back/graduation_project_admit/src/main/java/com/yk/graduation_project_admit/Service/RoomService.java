@@ -59,20 +59,40 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    public String deleteRoom(Long id) {
+    public Iterable<Room> getRoom() {
+        return roomRepository.findAll();
+    }
+
+//    public Room add(RoomDto roomDto) {
+//        if (roomDto != null) {
+//            Room roompojo = new Room();
+//            BeanUtils.copyProperties(roomDto, roompojo);
+//            roompojo.setStatus01(0);
+//            roompojo.setStatus02(0);
+//            roompojo.setStatus03(0);
+//            roompojo.setStatus04(0);
+//            try {
+//                validateRoom(roompojo);
+//            } catch (Exception e) {
+//                System.out.println(e.getMessage());
+//                throw new RuntimeException(e);
+//            }
+//            System.out.println("roomDto" + roomDto);
+//            return roomRepository.save(roompojo);
+//        } else {
+//            return null;
+//        }
+//
+//    }
+
+    public String deleteRoom(Integer roomId) {
         try {
-            roomRepository.deleteById(Math.toIntExact(id));
+            roomRepository.deleteById(roomId);
             return "删除成功";
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
+            return e.getMessage();
         }
     }
 
-    public Room add(RoomDto roomDto) {
-        return null;
-    }
-
-    public Iterable<Room> getRoom() {
-        return null;
-    }
 }

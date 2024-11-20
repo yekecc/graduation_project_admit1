@@ -34,15 +34,15 @@ public class RoomController {
      * @param roomDto 教室信息DTO
      * @return 创建的教室信息
      */
-    @PostMapping
-    public ResponseMessage add(@RequestBody RoomDto roomDto) {
-        Room data = roomService.add(roomDto);
-        if (roomDto == null) {
-            return ResponseMessage.fail("数据不能为空");
-        } else {
-            return ResponseMessage.success(data);
-        }
-    }
+//    @PostMapping
+//    public ResponseMessage add(@RequestBody RoomDto roomDto) {
+//        Room data = roomService.add(roomDto);
+//        if (roomDto == null) {
+//            return ResponseMessage.fail("数据不能为空");
+//        } else {
+//            return ResponseMessage.success(data);
+//        }
+//    }
 
     /**
      *
@@ -53,7 +53,7 @@ public class RoomController {
      */
     @DeleteMapping
     public ResponseMessage deleteRoom(Integer roomId) {
-        String result = roomService.deleteRoom(Long.valueOf(roomId));
+        String result = roomService.deleteRoom(Math.toIntExact(Long.valueOf(roomId)));
         return ResponseMessage.success(result);
     }
 }

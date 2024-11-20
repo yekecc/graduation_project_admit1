@@ -12,7 +12,6 @@
     "@surely-vue/table": "^4.3.12",
     "ant-design-vue": "^4.0.0-rc.6",
     "axios": "^1.7.7",
-    "element-plus": "^2.8.4",
     "lodash": "^4.17.21",
     "pinia": "^2.2.4",
     "pinia-plugin-persistedstate": "^4.1.1",
