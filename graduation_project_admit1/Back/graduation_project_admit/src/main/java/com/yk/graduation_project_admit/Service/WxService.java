@@ -45,11 +45,37 @@ public class WxService {
     @Value("${wx.secret}")
     private String secret;
 
+    /**
+     * @param code
+     * @return openid session_key
+     */
     public String getUserpro(String code) {
-        String url = String.format("https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code",
-                appid, secret, code);
-        return HttpUtil.get(url);
+        if (code == null) {
+
+            return "请求失败，code为空";
+        } else {
+            String url = "https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code ";
+            url = url.replace("APPID", appid);
+            url = url.replace("SECRET", appsecret);
+            url = url.replace("JSCODE", code);
+
+            String responseBody;
+
+            try {
+                ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+                responseBody = responseEntity.getBody();
+                MediaType contentType = responseEntity.getHeaders().getContentType();
+                JSONUtil.toJsonStr(responseBody);
+                System.out.println("Response Body: " + responseBody);
+                System.out.println("Content Type: " + contentType);
+            } catch (RestClientException e) {
+                throw new RuntimeException(e);
+            }
+
+            return responseBody;
+        }
     }
+
 
     public User getUser(String openid) {
         return userRepository.findByOpenid(openid).orElse(null);
