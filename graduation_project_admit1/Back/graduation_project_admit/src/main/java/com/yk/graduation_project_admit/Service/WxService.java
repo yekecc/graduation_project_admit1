@@ -1,11 +1,9 @@
 package com.yk.graduation_project_admit.Service;
 
-import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.yk.graduation_project_admit.pojo.Reservation;
 import com.yk.graduation_project_admit.pojo.Room;
 import com.yk.graduation_project_admit.pojo.User;
-import com.yk.graduation_project_admit.pojo.dto.BorrowDto;
 import com.yk.graduation_project_admit.pojo.dto.ReservationDto;
 import com.yk.graduation_project_admit.pojo.dto.UserDto;
 import com.yk.graduation_project_admit.repository.ReservationRepository;
@@ -14,7 +12,6 @@ import com.yk.graduation_project_admit.repository.TimeSlotRepository;
 import com.yk.graduation_project_admit.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,23 +24,19 @@ import java.util.List;
 @Service
 @Transactional
 public class WxService {
+
+    private final String appid = "wx3b2dd66cfe6d8d9b";
+    private final String appsecret = "8032ae51432227662a9bb6b8009d8363";
+    
+    private RestTemplate restTemplate;
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private ReservationRepository reservationRepository;
-
     @Autowired
     private RoomRepository roomRepository;
-
     @Autowired
     private TimeSlotRepository timeSlotRepository;
-
-    @Value("${wx.appid}")
-    private String appid;
-
-    @Value("${wx.secret}")
-    private String secret;
 
     /**
      * @param code

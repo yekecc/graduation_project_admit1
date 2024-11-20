@@ -26,8 +26,17 @@ public class BorrowDto {
      * 借用教室ID
      */
     private Long roomID;
+    /**
+     *
+     */
     private String roomName;
+    /**
+     *
+     */
     private String roomAddress;
+    /**
+     *
+     */
     private String roomType;
     /**
      * 借用时间

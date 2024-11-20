@@ -4,19 +4,17 @@ import com.yk.graduation_project_admit.pojo.Reservation;
 import com.yk.graduation_project_admit.pojo.Room;
 import com.yk.graduation_project_admit.pojo.dto.RoomDto;
 import com.yk.graduation_project_admit.pojo.vo.RoomAvailabilityVO;
-import com.yk.graduation_project_admit.repository.RoomRepository;
 import com.yk.graduation_project_admit.repository.ReservationRepository;
+import com.yk.graduation_project_admit.repository.RoomRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,7 +46,7 @@ public class RoomService {
     }
 
     private boolean isTimeSlotAvailable(Room room, LocalDate date,
-            String timeSlot, List<Reservation> reservations) {
+                                        String timeSlot, List<Reservation> reservations) {
         return reservations.stream()
                 .noneMatch(r -> r.getRoom().getId().equals(room.getId())
                         && r.getTimeSlot().equals(timeSlot)
@@ -61,8 +59,13 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    public void deleteRoom(Long id) {
-        roomRepository.deleteById(Math.toIntExact(id));
+    public String deleteRoom(Long id) {
+        try {
+            roomRepository.deleteById(Math.toIntExact(id));
+            return "删除成功";
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Room add(RoomDto roomDto) {
