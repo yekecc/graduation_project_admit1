@@ -1,19 +1,26 @@
 package com.yk.graduation_project_admit.pojo.dto;
 
 import lombok.*;
+import java.time.LocalDateTime;
 
+/**
+ * 用户数据传输对象
+ * 用于前后端交互时传递用户信息
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Setter
 @Getter
 public class UserDto {
-    private Integer userID;
-    private String username;
-    private String password;
-    private String telephone;
-    private String userClass;
-    private String office;
-    private String userNumber;
+    private Long id;
     private String openid;
+    private String username;
+    private String userNumber;
+    private String userClass;
+    private String telephone;
+    private Integer role;
+    private String password;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 }

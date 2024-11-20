@@ -3,6 +3,12 @@ package com.yk.graduation_project_admit.pojo;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 
+/**
+ * 统一响应消息类
+ * 用于规范化API响应格式
+ * 
+ * @param <T> 响应数据的类型
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
