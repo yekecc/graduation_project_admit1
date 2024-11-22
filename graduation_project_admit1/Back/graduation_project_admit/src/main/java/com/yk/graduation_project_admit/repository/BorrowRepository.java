@@ -16,7 +16,8 @@ public interface BorrowRepository extends CrudRepository<Borrow, Long> {
      * @param status04
      * @return Borrow
      */
-    @Query("select b from Borrow b where b.openid = :openid " +
+    @Query("select b from Borrow b " +
+            "where b.openid = :openid " +
             " and b.RoomID = :RoomID " +
             " and b.status01 = :status01" +
             " and b.status02 = :status02" +
