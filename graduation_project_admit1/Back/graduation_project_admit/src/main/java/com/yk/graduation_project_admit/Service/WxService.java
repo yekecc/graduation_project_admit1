@@ -8,7 +8,6 @@ import com.yk.graduation_project_admit.pojo.dto.ReservationDto;
 import com.yk.graduation_project_admit.pojo.dto.UserDto;
 import com.yk.graduation_project_admit.repository.ReservationRepository;
 import com.yk.graduation_project_admit.repository.RoomRepository;
-import com.yk.graduation_project_admit.repository.TimeSlotRepository;
 import com.yk.graduation_project_admit.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +35,6 @@ public class WxService {
     private ReservationRepository reservationRepository;
     @Autowired
     private RoomRepository roomRepository;
-    @Autowired
-    private TimeSlotRepository timeSlotRepository;
 
     /**
      * @param code

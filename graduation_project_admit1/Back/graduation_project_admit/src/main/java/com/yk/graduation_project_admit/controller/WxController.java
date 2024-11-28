@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 微信小程序控制器
@@ -49,11 +50,7 @@ public class WxController {
             String sessionkey = jsonObject.get("session_key").toString();
             User userPro = wxService.getUser(openid);
 
-            if (userPro == null) {
-                jsonObject.putOpt("userPro", jsonObject.isNull("userPro"));
-            } else {
-                jsonObject.putOpt("userPro", userPro);
-            }
+            jsonObject.putOpt("userPro", Objects.requireNonNullElseGet(userPro, () -> jsonObject.isNull("userPro")));
 
             return ResponseMessage.success(jsonObject);
         }
@@ -81,8 +78,7 @@ public class WxController {
      * @return 可用教室列表
      */
     @GetMapping("/rooms/available")
-    public ResponseMessage getRoomAvailability(
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+    public ResponseMessage getRoomAvailability(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         try {
             List<RoomAvailabilityVO> rooms = roomService.getRoomAvailability(date);
             return ResponseMessage.success(rooms);
@@ -132,9 +128,7 @@ public class WxController {
      * @return 取消结果
      */
     @PostMapping("/reservation/{id}/cancel")
-    public ResponseMessage cancelReservation(
-            @PathVariable Long id,
-            @RequestParam String openid) {
+    public ResponseMessage cancelReservation(@PathVariable Long id, @RequestParam String openid) {
         try {
             wxService.cancelReservation(id, openid);
             return ResponseMessage.success("取消成功");

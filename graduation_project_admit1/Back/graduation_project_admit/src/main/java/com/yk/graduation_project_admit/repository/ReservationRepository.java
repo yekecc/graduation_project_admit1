@@ -14,12 +14,11 @@ import java.util.Optional;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findByOpenidOrderByCreateTimeDesc(String openid);
 
-    List<Reservation> findByReservationDateAndStatusNot(LocalDate date, int status);;
+    List<Reservation> findByReservationDateAndStatusNot(LocalDate date, int status);
 
     Optional<Reservation> findByIdAndOpenid(Long id, String openid);
-    
-    boolean existsByRoomIdAndReservationDateAndTimeSlotAndStatusNot(
-        Long roomId, LocalDate date, String timeSlot, Integer status);
+
+    boolean existsByRoomIdAndReservationDateAndTimeSlotAndStatusNot(Long roomId, LocalDate date, String timeSlot, Integer status);
 
     Page<Reservation> findByStatusOrderByCreateTimeDesc(int i, PageRequest of);
 

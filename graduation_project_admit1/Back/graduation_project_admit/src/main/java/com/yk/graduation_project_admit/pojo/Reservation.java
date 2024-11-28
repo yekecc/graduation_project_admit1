@@ -1,8 +1,5 @@
 package com.yk.graduation_project_admit.pojo;
 
-import com.yk.graduation_project_admit.pojo.Room;
-
-import com.yk.graduation_project_admit.pojo.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -58,3 +55,4 @@ public class Reservation {
         createTime = LocalDateTime.now();
     }
 }
+
