@@ -68,6 +68,12 @@ public class AdmitController {
         }
     }
 
+    /**
+     *
+     * @param page
+     * @param size
+     * @return
+     */
     @GetMapping("/reservations/pending")
     public ResponseMessage getPendingReservations(
             @RequestParam(defaultValue = "0") int page,
@@ -80,6 +86,14 @@ public class AdmitController {
         }
     }
 
+    /**
+     *
+     * @param id
+     * @param auditorId
+     * @param auditResult
+     * @param auditRemark
+     * @return
+     */
     @PostMapping("/reservations/{id}/audit")
     public ResponseMessage auditReservation(
             @PathVariable Long id,

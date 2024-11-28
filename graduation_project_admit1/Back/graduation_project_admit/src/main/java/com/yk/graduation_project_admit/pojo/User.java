@@ -38,22 +38,22 @@ public class User {
     private Integer role = 0; // 0-学生 1-教师 2-管理员
 
     private String password;
-
-    @Column(updatable = false)
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
-
-    @PrePersist
-    protected void onCreate() {
-        createTime = LocalDateTime.now();
-        updateTime = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updateTime = LocalDateTime.now();
-    }
+//
+//    @Column(updatable = false)
+//    private LocalDateTime createTime;
+//
+//    private LocalDateTime updateTime;
+//
+//    @PrePersist
+//    protected void onCreate() {
+//        createTime = LocalDateTime.now();
+//        updateTime = LocalDateTime.now();
+//    }
+//
+//    @PreUpdate
+//    protected void onUpdate() {
+//        updateTime = LocalDateTime.now();
+//    }
 
     public User orElse(Object o) {
         return null;

@@ -59,9 +59,9 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    public Iterable<Room> getRoom() {
-        return roomRepository.findAll();
-    }
+//    public Iterable<Room> getRoom() {
+//        return roomRepository.findAll();
+//    }
 
 //    public Room add(RoomDto roomDto) {
 //        if (roomDto != null) {
@@ -85,14 +85,14 @@ public class RoomService {
 //
 //    }
 
-    public String deleteRoom(Integer roomId) {
-        try {
-            roomRepository.deleteById(roomId);
-            return "删除成功";
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return e.getMessage();
-        }
-    }
+//    public String deleteRoom(Integer roomId) {
+//        try {
+//            roomRepository.deleteById(roomId);
+//            return "删除成功";
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            return e.getMessage();
+//        }
+//    }
 
 }

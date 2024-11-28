@@ -41,7 +41,7 @@ public class BorrowDto {
     /**
      * 借用时间
      */
-    private Date bTime;
+    private LocalDate reservationDate;
 
     /**
      * 使用目的
@@ -67,7 +67,6 @@ public class BorrowDto {
      * 下午3点是否可借
      */
     private Integer status04;
-
 
 
 }

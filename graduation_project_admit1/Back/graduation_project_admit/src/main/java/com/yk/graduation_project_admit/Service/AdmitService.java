@@ -41,7 +41,7 @@ public class AdmitService {
     }
 
     public List<User> getAllUser() {
-        return (List<User>) UserRepository.findAll();
+        return UserRepository.findAll();
     }
 
     public Page<Reservation> getPendingReservations(int page, int size) {

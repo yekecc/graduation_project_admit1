@@ -20,6 +20,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -27,7 +28,7 @@ public class WxService {
 
     private final String appid = "wx3b2dd66cfe6d8d9b";
     private final String appsecret = "8032ae51432227662a9bb6b8009d8363";
-    
+    @Autowired
     private RestTemplate restTemplate;
     @Autowired
     private UserRepository userRepository;
@@ -71,7 +72,14 @@ public class WxService {
 
 
     public User getUser(String openid) {
-        return userRepository.findByOpenid(openid).orElse(null);
+        System.out.println("Fetching user with openid: " + openid);
+        Optional<User> user = Optional.ofNullable(userRepository.getByOpenid(openid));
+        if (user.isPresent()) {
+            System.out.println("User found: " + user.get());
+        } else {
+            System.out.println("No user found with openid: " + openid);
+        }
+        return user.orElse(null);
     }
 
     public User addUser(UserDto userDto) {
@@ -82,13 +90,11 @@ public class WxService {
 
     public Reservation createReservation(ReservationDto dto) {
         // 检查时间段是否已被预约
-        if (reservationRepository.existsByRoomIdAndReservationDateAndTimeSlotAndStatusNot(
-                dto.getRoomId(), dto.getReservationDate(), dto.getTimeSlot(), 3)) {
+        if (reservationRepository.existsByRoomIdAndReservationDateAndTimeSlotAndStatusNot(dto.getRoomId(), dto.getReservationDate(), dto.getTimeSlot(), 3)) {
             throw new RuntimeException("该时间段已被预约");
         }
 
-        Room room = roomRepository.findById(Math.toIntExact(dto.getRoomId()))
-                .orElseThrow(() -> new RuntimeException("房间不存在"));
+        Room room = roomRepository.findById(Math.toIntExact(dto.getRoomId())).orElseThrow(() -> new RuntimeException("房间不存在"));
 
         Reservation reservation = new Reservation();
         BeanUtils.copyProperties(dto, reservation);
@@ -103,8 +109,7 @@ public class WxService {
     }
 
     public void cancelReservation(Long id, String openid) {
-        Reservation reservation = reservationRepository.findByIdAndOpenid(id, openid)
-                .orElseThrow(() -> new RuntimeException("预约记录不存在"));
+        Reservation reservation = reservationRepository.findByIdAndOpenid(id, openid).orElseThrow(() -> new RuntimeException("预约记录不存在"));
 
         if (reservation.getStatus() != 0) {
             throw new RuntimeException("该预约已不能取消");
