@@ -1,5 +1,5 @@
-import { ref } from "vue";
-import { defineStore } from 'pinia'
+import {ref} from "vue";
+import {defineStore} from 'pinia'
 
 const AdmitData = defineStore('user', () => {
     const data = ref({
@@ -14,7 +14,6 @@ const AdmitData = defineStore('user', () => {
     })
 
 
-
     const updata = (val) => {
         data.value = val
     }
@@ -24,8 +23,7 @@ const AdmitData = defineStore('user', () => {
         updata
     }
 
-}, { persist: true })
-
+}, {persist: true})
 
 
 export default AdmitData

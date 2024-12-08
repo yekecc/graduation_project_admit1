@@ -4,12 +4,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+
 @Entity
 @Table(name = "room")
 
@@ -44,25 +46,5 @@ public class Room {
      */
     @Column(columnDefinition = "TINYINT DEFAULT 1")
     private Boolean status = true;
-    /**
-     * 房间创建时间
-     */
-    @Column(updatable = false)
-    private LocalDateTime createTime;
-    /**
-     * 房间更新时间
-     */
-    private LocalDateTime updateTime;
-
-    @PrePersist
-    protected void onCreate() {
-        createTime = LocalDateTime.now();
-        updateTime = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updateTime = LocalDateTime.now();
-    }
 
 }

@@ -1,7 +1,5 @@
-
 package com.yk.graduation_project_admit.pojo.dto;
 
-import com.yk.graduation_project_admit.pojo.dto.BorrowDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -55,11 +53,6 @@ public class ReservationDto {
      * 使用目的
      */
     private String usePurpose;
-
-    /**
-     * 备注信息
-     */
-    private String remark;
 
     // 从 BorrowDto 转换为 ReservationDto
     public static ReservationDto fromBorrowDto(BorrowDto borrowDto) {

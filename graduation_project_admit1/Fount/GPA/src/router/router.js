@@ -1,7 +1,7 @@
-
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 
 import Layout from '../view/Layout/page.vue'
+
 const routes = [
     {
         path: '/login',

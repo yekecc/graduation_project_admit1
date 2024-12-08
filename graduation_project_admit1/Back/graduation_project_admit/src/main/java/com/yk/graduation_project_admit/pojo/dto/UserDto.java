@@ -1,7 +1,6 @@
 package com.yk.graduation_project_admit.pojo.dto;
 
 import lombok.*;
-import java.time.LocalDateTime;
 
 /**
  * 用户数据传输对象
@@ -21,6 +20,4 @@ public class UserDto {
     private String telephone;
     private Integer role;
     private String password;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
 }

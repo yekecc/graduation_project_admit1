@@ -10,6 +10,7 @@ import com.yk.graduation_project_admit.pojo.dto.BorrowDto;
 import com.yk.graduation_project_admit.pojo.dto.ReservationDto;
 import com.yk.graduation_project_admit.pojo.dto.UserDto;
 import com.yk.graduation_project_admit.pojo.vo.RoomAvailabilityVO;
+import com.yk.graduation_project_admit.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,8 @@ public class WxController {
 
     @Autowired
     private RoomService roomService;
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     /**
      * 微信用户登录
@@ -103,6 +106,7 @@ public class WxController {
             return ResponseMessage.fail("预约失败：" + e.getMessage());
         }
     }
+
 
     /**
      * 获取用户的预约记录

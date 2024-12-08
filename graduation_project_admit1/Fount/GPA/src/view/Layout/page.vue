@@ -1,15 +1,7 @@
 <script setup>
-import {
-  PieChartOutlined,
-  DesktopOutlined,
-  UserOutlined,
-  TeamOutlined,
-  FileOutlined,
-} from '@ant-design/icons-vue';
-import { defineComponent, ref } from 'vue';
+import {computed} from 'vue';
+import {useRouter} from 'vue-router'
 
-import { computed } from 'vue';
-import { useRouter } from 'vue-router'
 const router = useRouter()
 const routes = computed(() => {
   return router.options.routes[1].children
@@ -20,7 +12,7 @@ console.log(router.options.routes[1].children)
   <a-layout style="min-height: 100vh">
     <a-layout-sider v-model:collapsed="collapsed" collapsible>
       <div class="logo">Low 狗</div>
-      <a-menu theme="dark" v-model:selectedKeys="selectedKeys" mode="inline">
+      <a-menu v-model:selectedKeys="selectedKeys" mode="inline" theme="dark">
         <a-menu-item v-for="(r, i) in routes" :key="i">
           <router-link :to="r.path">
             <span>{{ r.meta.title }}</span>
@@ -29,7 +21,7 @@ console.log(router.options.routes[1].children)
       </a-menu>
     </a-layout-sider>
     <a-layout>
-      <a-layout-header style="background: #fff; padding: 0" />
+      <a-layout-header style="background: #fff; padding: 0"/>
       <a-layout-content style="margin: 0 16px">
         <a-breadcrumb style="margin: 16px 0">
 

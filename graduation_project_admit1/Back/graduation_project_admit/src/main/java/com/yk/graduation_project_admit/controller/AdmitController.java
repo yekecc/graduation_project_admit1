@@ -2,7 +2,6 @@ package com.yk.graduation_project_admit.controller;
 
 import com.yk.graduation_project_admit.Service.AdmitService;
 import com.yk.graduation_project_admit.pojo.Reservation;
-import com.yk.graduation_project_admit.pojo.ReservationAudit;
 import com.yk.graduation_project_admit.pojo.ResponseMessage;
 import com.yk.graduation_project_admit.pojo.User;
 import com.yk.graduation_project_admit.pojo.dto.admit_login_dto;
@@ -68,13 +67,6 @@ public class AdmitController {
         }
     }
 
-    /**
-     *
-     * @param page
-     * @param size
-     * @return
-     */
-    @GetMapping("/reservations/pending")
     public ResponseMessage getPendingReservations(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -83,28 +75,6 @@ public class AdmitController {
             return ResponseMessage.success(reservations);
         } catch (Exception e) {
             return ResponseMessage.fail("获取待审核预约失败：" + e.getMessage());
-        }
-    }
-
-    /**
-     *
-     * @param id
-     * @param auditorId
-     * @param auditResult
-     * @param auditRemark
-     * @return
-     */
-    @PostMapping("/reservations/{id}/audit")
-    public ResponseMessage auditReservation(
-            @PathVariable Long id,
-            @RequestParam String auditorId,
-            @RequestParam Integer auditResult,
-            @RequestParam(required = false) String auditRemark) {
-        try {
-            ReservationAudit audit = admitService.auditReservation(id, auditorId, auditResult, auditRemark);
-            return ResponseMessage.success(audit);
-        } catch (Exception e) {
-            return ResponseMessage.fail("审核失败：" + e.getMessage());
         }
     }
 

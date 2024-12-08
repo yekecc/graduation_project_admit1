@@ -1,5 +1,5 @@
-import { ref } from "vue";
-import { defineStore } from 'pinia'
+import {ref} from "vue";
+import {defineStore} from 'pinia'
 
 const ClassData = defineStore('room', () => {
     const data = ref([])
@@ -12,6 +12,6 @@ const ClassData = defineStore('room', () => {
         data,
         updata
     }
-}, { persist: true })
+}, {persist: true})
 
 export default ClassData

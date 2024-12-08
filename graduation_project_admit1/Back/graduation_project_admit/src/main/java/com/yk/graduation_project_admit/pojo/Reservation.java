@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * 预约实体类
@@ -42,17 +41,8 @@ public class Reservation {
     private String usePurpose;
 
     @Column(columnDefinition = "TINYINT DEFAULT 0")
-    private Integer status = 0; // 0-待审核 1-已通过 2-已拒绝 3-已取消
+    private Integer status = 0;
+    // 1-已确认
 
     private String remark;
-    private String auditRemark;
-
-    @Column(updatable = false)
-    private LocalDateTime createTime;
-
-    @PrePersist
-    protected void onCreate() {
-        createTime = LocalDateTime.now();
-    }
 }
-

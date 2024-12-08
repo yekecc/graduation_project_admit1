@@ -1,6 +1,7 @@
 package com.yk.graduation_project_admit.repository;
 
 import com.yk.graduation_project_admit.pojo.Reservation;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,17 +13,16 @@ import java.util.Optional;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-    List<Reservation> findByOpenidOrderByCreateTimeDesc(String openid);
-
-    List<Reservation> findByReservationDateAndStatusNot(LocalDate date, int status);
-
     Optional<Reservation> findByIdAndOpenid(Long id, String openid);
 
-    boolean existsByRoomIdAndReservationDateAndTimeSlotAndStatusNot(Long roomId, LocalDate date, String timeSlot, Integer status);
+    boolean existsByRoomIdAndReservationDateAndTimeSlotAndStatusNot(Long roomId, LocalDate date, String timeSlot,
+            Integer status);
 
-    Page<Reservation> findByStatusOrderByCreateTimeDesc(int i, PageRequest of);
+    Page<Reservation> findByStatusOrderByIdDesc(int status, PageRequest pageRequest);
 
-    List<Reservation> findByReservationDateBetweenAndStatus(LocalDate startDate, LocalDate endDate, int i);
+    List<Reservation> findByReservationDateBetweenAndStatus(LocalDate startDate, LocalDate endDate, int status);
 
     List<Reservation> findByReservationDate(LocalDate date);
-} 
+
+    List<Reservation> findByOpenidOrderByIdDesc(String openid);
+}

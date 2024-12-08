@@ -67,7 +67,6 @@ public class WxService {
         }
     }
 
-
     public User getUser(String openid) {
         System.out.println("Fetching user with openid: " + openid);
         Optional<User> user = Optional.ofNullable(userRepository.getByOpenid(openid));
@@ -87,32 +86,35 @@ public class WxService {
 
     public Reservation createReservation(ReservationDto dto) {
         // 检查时间段是否已被预约
-        if (reservationRepository.existsByRoomIdAndReservationDateAndTimeSlotAndStatusNot(dto.getRoomId(), dto.getReservationDate(), dto.getTimeSlot(), 3)) {
+        if (reservationRepository.existsByRoomIdAndReservationDateAndTimeSlotAndStatusNot(dto.getRoomId(),
+                dto.getReservationDate(), dto.getTimeSlot(), 2)) {
             throw new RuntimeException("该时间段已被预约");
         }
 
-        Room room = roomRepository.findById(Math.toIntExact(dto.getRoomId())).orElseThrow(() -> new RuntimeException("房间不存在"));
+        Room room = roomRepository.findById(Math.toIntExact(dto.getRoomId()))
+                .orElseThrow(() -> new RuntimeException("房间不存在"));
 
         Reservation reservation = new Reservation();
         BeanUtils.copyProperties(dto, reservation);
         reservation.setRoom(room);
-        reservation.setStatus(0);
+        reservation.setStatus(1); // 直接设置为已确认状态
 
         return reservationRepository.save(reservation);
     }
 
     public List<Reservation> getUserReservations(String openid) {
-        return reservationRepository.findByOpenidOrderByCreateTimeDesc(openid);
+        return reservationRepository.findByOpenidOrderByIdDesc(openid);
     }
 
     public void cancelReservation(Long id, String openid) {
-        Reservation reservation = reservationRepository.findByIdAndOpenid(id, openid).orElseThrow(() -> new RuntimeException("预约记录不存在"));
+        Reservation reservation = reservationRepository.findByIdAndOpenid(id, openid)
+                .orElseThrow(() -> new RuntimeException("预约记录不存在"));
 
         if (reservation.getStatus() != 0) {
             throw new RuntimeException("该预约已不能取消");
         }
 
-        reservation.setStatus(3);
+        reservation.setStatus(2);
         reservationRepository.save(reservation);
     }
 }

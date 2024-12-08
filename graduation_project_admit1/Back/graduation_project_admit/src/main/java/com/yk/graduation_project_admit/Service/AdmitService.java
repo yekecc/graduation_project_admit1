@@ -1,9 +1,7 @@
 package com.yk.graduation_project_admit.Service;
 
 import com.yk.graduation_project_admit.pojo.Reservation;
-import com.yk.graduation_project_admit.pojo.ReservationAudit;
 import com.yk.graduation_project_admit.pojo.User;
-import com.yk.graduation_project_admit.repository.ReservationAuditRepository;
 import com.yk.graduation_project_admit.repository.ReservationRepository;
 import com.yk.graduation_project_admit.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +27,6 @@ public class AdmitService {
     @Autowired
     private ReservationRepository reservationRepository;
 
-    @Autowired
-    private ReservationAuditRepository auditRepository;
-
     /**
      * @param userNumber
      * @return
@@ -45,30 +40,7 @@ public class AdmitService {
     }
 
     public Page<Reservation> getPendingReservations(int page, int size) {
-        return reservationRepository.findByStatusOrderByCreateTimeDesc(
-                0, PageRequest.of(page, size));
-    }
-
-    public ReservationAudit auditReservation(
-            Long reservationId, String auditorId, Integer auditResult, String auditRemark) {
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new RuntimeException("预约记录不存在"));
-
-        if (reservation.getStatus() != 0) {
-            throw new RuntimeException("该预约已被审核");
-        }
-
-        reservation.setStatus(auditResult);
-        reservation.setAuditRemark(auditRemark);
-        reservationRepository.save(reservation);
-
-        ReservationAudit audit = new ReservationAudit();
-        audit.setReservation(reservation);
-        audit.setAuditorId(auditorId);
-        audit.setAuditResult(auditResult);
-        audit.setAuditRemark(auditRemark);
-
-        return auditRepository.save(audit);
+        return reservationRepository.findByStatusOrderByIdDesc(0, PageRequest.of(page, size));
     }
 
     public Map<String, Object> getReservationStatistics(LocalDate startDate, LocalDate endDate) {
