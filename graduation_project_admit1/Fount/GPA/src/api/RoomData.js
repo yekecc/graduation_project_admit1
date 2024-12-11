@@ -3,7 +3,7 @@ import service from '../until/request'
 export function getRoom() {
     return service({
         method: 'get',
-        url: '/room',
+        url: '/admit/getAllRoom',
     })
 }
 
@@ -12,5 +12,12 @@ export function updateRoom(data) {
         method: 'post',
         url: '/room',
         data
+    })
+}
+
+export function getReservations() {
+    return service({
+        method: 'get',
+        url: '/admit/getAllReservation',
     })
 }

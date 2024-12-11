@@ -1,8 +1,10 @@
 package com.yk.graduation_project_admit.Service;
 
 import com.yk.graduation_project_admit.pojo.Reservation;
+import com.yk.graduation_project_admit.pojo.Room;
 import com.yk.graduation_project_admit.pojo.User;
 import com.yk.graduation_project_admit.repository.ReservationRepository;
+import com.yk.graduation_project_admit.repository.RoomRepository;
 import com.yk.graduation_project_admit.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,8 @@ public class AdmitService {
 
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private RoomRepository roomRepository;
 
     /**
      * @param userNumber
@@ -37,6 +41,14 @@ public class AdmitService {
 
     public List<User> getAllUser() {
         return UserRepository.findAll();
+    }
+
+    public List<Room> getAllRoom() {
+        return roomRepository.findAll();
+    }
+
+    public List<Reservation> getAllReservation() {
+        return reservationRepository.findAll();
     }
 
     public Page<Reservation> getPendingReservations(int page, int size) {

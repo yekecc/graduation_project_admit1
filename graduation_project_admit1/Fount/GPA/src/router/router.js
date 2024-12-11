@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 import Layout from '../view/Layout/page.vue'
 
@@ -8,14 +8,20 @@ const routes = [
         name: 'login',
         component: () => import('../view/login/index.vue')
     }, {
-        path: '/Layout',
+        path: '/',
         name: 'Layout',
         component: Layout,
 
-        redirect: "/Layout",
+        redirect: "/StatisticsReport",
         children: [{
+            path: '/StatisticsReport',
+            component: () => import('../view/Layout/StatisticsReport.vue'),
+            meta: {
+                title: '统计报表'
+            }
+        }, {
             path: '/Layout',
-            component: import('../view/Layout/AppointmentList.vue'),
+            component: () => import('../view/Layout/AppointmentList.vue'),
             meta: {
                 title: '预约列表'
             }
@@ -31,7 +37,7 @@ const routes = [
             meta: {
                 title: '课室列表'
             }
-        }]
+        },]
     }
 ]
 

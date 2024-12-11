@@ -1,143 +1,97 @@
-<script setup>
-import {computed, onMounted, ref, watch} from 'vue';
-import {getRoom, updateRoom} from '../../api/RoomData';
-import Class from './Class.vue';
-import ClassData from '../../store/roomdata';
-import _ from 'lodash';
-
-const RoomData = ref([]);
-
-const {updata} = ClassData();
-
-const roomType = ref([]);
-
-const key = ref(0);
-onMounted(async () => {
-  try {
-    const res = await getRoom();
-    RoomData.value = res.data.data;
-  } catch (error) {
-    console.error(error);
-  }
-});
-const activeName = ref('');
-const groupedData = computed(() => {
-  const r = _(RoomData.value).groupBy('roomType').value();
-  if (Object.keys(r).length > 0) {
-    activeName.value = Object.keys(r)[0];
-  }
-  return r;
-});
-
-watch(activeName, (newVal, oldVal) => {
-  if (newVal !== '') {
-    updata(groupedData.value[newVal]);
-  }
-});
-
-watch(activeName, function (new_value, old_value) {
-  if (new_value != '') {
-    updata(groupedData.value[new_value]);
-  }
-});
-const nameValue = ref('');
-const timeValue = ref([]);
-const typeValue = ref([]);
-const addressValue = ref('');
-const descriptionValue = ref('');
-const showModal = ref(false);
-
-// const options = [
-//     {
-//         value: '8:30-9:50',
-//         label: '8:30-9:50',
-//     }, {
-//         value: '10:10-11:30',
-//         label: '10:10-11:30',
-//     }, {
-//         value: '13:50-15:10',
-//         label: '13:50-15:10',
-//     }, {
-//         value: '15:20-16:40',
-//         label: '15:20-16:40',
-//     }
-// ];
-
-const typeOptions = [
-  {
-    value: '音乐室',
-    label: '音乐室',
-  }, {
-    value: '美术室',
-    label: '美术室',
-  }, {
-    value: '教室',
-    label: '教室',
-  }, {
-    value: '会议室',
-    label: '会议室',
-  }
-];
-
-const formState = ref({
-  roomName: '',
-  roomAddress: '',
-  roomDescription: '',
-  roomType: '',
-});
-
-const handleTabClick = (tab) => {
-  console.log(tab);
-};
-
-const ClassDataComputed = computed(() => {
-  return ssss.data.value;
-});
-
-const handleOk = async () => {
-  formState.value.roomType = formState.value.roomType[formState.value.roomType.length - 1];
-  console.log('11111111111', formState.value);
-  const res = await updateRoom(formState.value);
-  console.log('res', res);
-  formState.value = {
-    roomName: '',
-    roomAddress: '',
-    roomDescription: '',
-    roomType: '',
-  };
-
-  showModal.value = false;
-};
-
-
-</script>
-
 <template>
-  <a-button style="margin: 10px;" type="primary" @click="showModal = true">添加</a-button>
-  <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleTabClick">
-    <el-tab-pane v-for="type in Object.keys(groupedData)" :key="type" :label="type" :name="type"></el-tab-pane>
-    <Class :key="activeName" :dataSource="groupedData[activeName]"/>
-  </el-tabs>
+  <a-card title="科室列表">
+    <div style="margin-bottom: 16px;">
+      <a-button type="primary" @click="showAddRoomModal">添加教室</a-button>
+      <a-button type="default" @click="exportExcel" style="margin-left: 8px;">导出 Excel</a-button>
+    </div>
+    <a-table :dataSource="rooms" :rowKey="room => room.id">
+      <a-table-column title="科室名称" dataIndex="roomName" />
+      <a-table-column title="科室地址" dataIndex="roomAddress" />
+      <a-table-column title="科室类型" dataIndex="roomType" />
+      <a-table-column title="容量" dataIndex="capacity" />
+      <a-table-column title="设备" dataIndex="equipment" />
+      <a-table-column title="状态">
+        <template #default="{ record }">
+          {{ record.status ? '可用' : '不可用' }}
+        </template>
+      </a-table-column>
+    </a-table>
 
-  <a-modal v-model:visible="showModal" title="添加教室信息" @ok="handleOk">
-    <a-form :model="formState" @finish="handleFinish">
-      <a-form-item label="教室" name="name">
-        <a-input v-model:value="formState.roomName"/>
-      </a-form-item>
-      <a-form-item label="地址" name="Address">
-        <a-input v-model:value="formState.roomAddress"/>
-      </a-form-item>
-      <a-form-item label="详细信息" name="Description">
-        <a-input v-model:value="formState.roomDescription"/>
-      </a-form-item>
-      <a-form-item label="类型" name="type">
-        <a-cascader v-model:value="formState.roomType" :options="typeOptions" placeholder="请选择类型"/>
-      </a-form-item>
-      <!-- <a-form-item>
-          <a-button type="primary" html-type="submit">提交</a-button>
-      </a-form-item> -->
-    </a-form>
-  </a-modal>
+    <!-- 添加教室模态框 -->
+    <a-modal v-model:visible="isAddRoomModalVisible" title="添加教室" @ok="addRoom" @cancel="isAddRoomModalVisible = false">
+      <a-form>
+        <a-form-item label="科室名称">
+          <a-input v-model="newRoom.roomName" />
+        </a-form-item>
+        <a-form-item label="科室地址">
+          <a-input v-model="newRoom.roomAddress" />
+        </a-form-item>
+        <a-form-item label="科室类型">
+          <a-input v-model="newRoom.roomType" />
+        </a-form-item>
+        <a-form-item label="容量">
+          <a-input type="number" v-model="newRoom.capacity" />
+        </a-form-item>
+        <a-form-item label="设备">
+          <a-input v-model="newRoom.equipment" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
+  </a-card>
 </template>
 
-<style scoped></style>
+<script setup>
+import { ref, onMounted } from 'vue';
+import { getRoom } from '../../api/RoomData'; // 引入获取科室信息的 API
+import * as XLSX from 'xlsx'; // 引入 xlsx 库
+
+const rooms = ref([]); // 用于存储科室信息
+const isAddRoomModalVisible = ref(false); // 控制模态框的显示
+const newRoom = ref({ // 新教室信息
+  roomName: '',
+  roomAddress: '',
+  roomType: '',
+  capacity: null,
+  equipment: '',
+  status: true // 默认状态为可用
+});
+
+const fetchRooms = async () => {
+  try {
+    const response = await getRoom(); // 调用 API 获取科室信息
+    if (response.data.code === 200) {
+      rooms.value = response.data.data; // 更新科室信息
+    } else {
+      console.error(response.data.message); // 处理失败情况
+    }
+  } catch (error) {
+    console.error("获取科室信息失败:", error); // 处理请求错误
+  }
+};
+
+const showAddRoomModal = () => {
+  isAddRoomModalVisible.value = true; // 显示添加教室模态框
+};
+
+const addRoom = () => {
+  // 这里可以添加逻辑将新教室信息发送到后端
+  rooms.value.push({ ...newRoom.value, id: rooms.value.length + 1 }); // 模拟添加教室
+  isAddRoomModalVisible.value = false; // 关闭模态框
+  newRoom.value = { roomName: '', roomAddress: '', roomType: '', capacity: null, equipment: '', status: true }; // 重置表单
+};
+
+const exportExcel = () => {
+  const worksheet = XLSX.utils.json_to_sheet(rooms.value); // 将数据转换为工作表
+  const workbook = XLSX.utils.book_new(); // 创建新工作簿
+  XLSX.utils.book_append_sheet(workbook, worksheet, '科室信息'); // 将工作表添加到工作簿
+  XLSX.writeFile(workbook, '科室信息.xlsx'); // 导出 Excel 文件
+};
+
+onMounted(() => {
+  fetchRooms(); // 组件挂载时调用获取科室信息的方法
+});
+</script>
+
+<style>
+/* 可以根据需要添加样式 */
+</style>

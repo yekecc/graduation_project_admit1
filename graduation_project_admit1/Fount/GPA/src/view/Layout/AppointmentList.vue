@@ -1,15 +1,17 @@
 <template>
-  <a-table :data-source="data" :columns="columns">
+  <h2 style="margin-bottom: 16px;">预约列表</h2>
+  <a-button @click="exportToExcel" type="primary" style="margin: 16px;">导出 Excel</a-button>
+  <a-table :data-source="reservations" :columns="columns" :row-key="record => record.id">
     <template #filterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
       <div style="padding: 8px">
         <a-input ref="searchInput" :placeholder="`Search ${column.dataIndex}`" :value="selectedKeys[0]"
-                 style="width: 188px; margin-bottom: 8px; display: block"
-                 @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
-                 @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"/>
+          style="width: 188px; margin-bottom: 8px; display: block"
+          @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
+          @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)" />
         <a-button type="primary" size="small" style="width: 90px; margin-right: 8px"
-                  @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
+          @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
           <template #icon>
-            <SearchOutlined/>
+            <SearchOutlined />
           </template>
           Search
         </a-button>
@@ -19,203 +21,124 @@
       </div>
     </template>
     <template #filterIcon="filtered">
-      <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }"/>
+      <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
     </template>
     <template #customRender="{ text, column }">
-            <span v-if="searchText && searchedColumn === column.dataIndex">
-                <template v-for="(fragment, i) in text
-                    .toString()
-                    .split(new RegExp(`(?<=${searchText})|(?=${searchText})`, 'i'))">
-                    <mark v-if="fragment.toLowerCase() === searchText.toLowerCase()" class="highlight" :key="i">
-                        {{ fragment }}
-                    </mark>
-                    <template v-else>{{ fragment }}</template>
-                </template>
-            </span>
+      <span v-if="searchText && searchedColumn === column.dataIndex">
+        <template v-for="(fragment, i) in text
+          .toString()
+          .split(new RegExp(`(?<=${searchText})|(?=${searchText})`, 'i'))">
+          <mark v-if="fragment.toLowerCase() === searchText.toLowerCase()" class="highlight" :key="i">
+            {{ fragment }}
+          </mark>
+          <template v-else>{{ fragment }}</template>
+        </template>
+      </span>
       <template v-else>
         {{ text }}
       </template>
     </template>
     <template #action>
-      <a-button type="primary" style="margin-right:8px ;">修改</a-button>
       <a-button type="primary">删除</a-button>
     </template>
   </a-table>
-</template>
-<script>
-import {SearchOutlined} from '@ant-design/icons-vue';
-import {defineComponent, reactive, ref, toRefs} from 'vue';
 
-const data = [
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+import { getReservations } from '../../api/RoomData'; // 导入新的 API 方法
+import { SearchOutlined } from '@ant-design/icons-vue';
+
+const searchText = ref('');
+const searchedColumn = ref('');
+const reservations = ref([]); // 使用 ref 创建响应式数据
+const searchInput = ref();
+
+// 获取预约数据
+const fetchReservations = async () => {
+  try {
+    const response = await getReservations(); // 使用封装的 API 方法
+    const result = response.data; // 根据实际返回结构调整
+    if (result.code === 200) {
+      reservations.value = result.data; // 存储获取到的预约数据
+    } else {
+      console.error('获取预约数据失败:', result.message);
+    }
+  } catch (error) {
+    console.error('请求失败:', error);
+  }
+};
+
+// 导出 Excel
+const exportToExcel = () => {
+  const ws = XLSX.utils.json_to_sheet(reservations.value);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Reservations');
+  const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
+  saveAs(data, 'reservations.xlsx');
+};
+
+// 在组件挂载时调用接口
+onMounted(() => {
+  fetchReservations();
+});
+
+const columns = [
   {
-    key: '1',
-    name: '傻逼',
-    Student_Number: 2206030000,
-    Class_and_Grade: '2022级计算机应用技术E班',
-    Class: '教学楼201',
-    Time: '8:30-9:50'
+    title: 'OpenID',
+    dataIndex: 'openid',
+    key: 'openid',
+    slots: {
+      headerCell: 'headerCell',
+      bodyCell: 'bodyCell',
+    },
+    onFilter: (value, record) =>
+      record.openid.toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          searchInput.value.focus();
+        }, 100);
+      }
+    },
   },
   {
-    key: '2',
-    name: '傻逼',
-    Student_Number: 2206030000,
-    Class_and_Grade: '2022级计算机应用技术E班',
-    Class: '教学楼201',
-    Time: '8:30-9:50'
+    title: '预约教室',
+    dataIndex: 'roomName',
+    key: 'roomName',
+    sorter: (a, b) => a.roomName.localeCompare(b.roomName),
   },
   {
-    key: '3',
-    name: '傻逼',
-    Student_Number: 2206030000,
-    Class_and_Grade: '2022级计算机应用技术E班',
-    Class: '教学楼201',
-    Time: '8:30-9:50'
+    title: '预约日期',
+    dataIndex: 'reservationDate',
+    key: 'reservationDate',
+    sorter: (a, b) => new Date(a.reservationDate) - new Date(b.reservationDate),
   },
   {
-    key: '4',
-    name: '傻逼',
-    Student_Number: 2206030000,
-    Class_and_Grade: '2022级计算机应用技术E班',
-    Class: '教学楼201',
-    Time: '8:30-9:50'
+    title: '时间段',
+    dataIndex: 'timeSlot',
+    key: 'timeSlot',
+    customRender: ({ text }) =>
+      text == 1 ? '8:30-9:50' :
+        text == 2 ? '10:10-11:30' :
+          text == 3 ? '13:50-15:10' :
+            text == 4 ? '15:20-16:40' :
+              '未知时间段',
+  },
+  {
+    title: '操作',
+    key: 'operation',
+    fixed: 'right',
+    width: 100,
+    slots: {
+      customRender: 'action',
+    },
   },
 ];
-export default defineComponent({
-  components: {
-    SearchOutlined,
-  },
-  setup() {
-    const state = reactive({
-      searchText: '',
-      searchedColumn: '',
-    });
-    const searchInput = ref();
-    const columns = [
-      {
-        title: '姓名',
-        dataIndex: 'name',
-        key: 'name',
-        slots: {
-          filterDropdown: 'filterDropdown',
-          filterIcon: 'filterIcon',
-          customRender: 'customRender',
-        },
-        onFilter: (value, record) =>
-            record.name.toString().toLowerCase().includes(value.toLowerCase()),
-        onFilterDropdownVisibleChange: visible => {
-          if (visible) {
-            setTimeout(() => {
-              console.log(searchInput.value);
-              searchInput.value.focus();
-            }, 100);
-          }
-        },
-      },
-      {
-        title: '学号',
-        dataIndex: 'Student_Number',
-        key: 'Student_Number',
-        slots: {
-          filterDropdown: 'filterDropdown',
-          filterIcon: 'filterIcon',
-          customRender: 'customRender',
-        },
-        onFilter: (value, record) =>
-            record.age.toString().toLowerCase().includes(value.toLowerCase()),
-        onFilterDropdownVisibleChange: visible => {
-          if (visible) {
-            setTimeout(() => {
-              searchInput.value.focus();
-            }, 100);
-          }
-        },
-      },
-      {
-        title: '班级',
-        dataIndex: 'Class_and_Grade',
-        key: 'Class_and_Grade',
-        slots: {
-          filterDropdown: 'filterDropdown',
-          filterIcon: 'filterIcon',
-          customRender: 'customRender',
-        },
-        onFilter: (value, record) =>
-            record.address.toString().toLowerCase().includes(value.toLowerCase()),
-        onFilterDropdownVisibleChange: visible => {
-          if (visible) {
-            setTimeout(() => {
-              searchInput.value.focus();
-            }, 100);
-          }
-        },
-      },
-      {
-        title: '预约教室',
-        dataIndex: 'Class',
-        key: 'Class',
-        slots: {
-          filterDropdown: 'filterDropdown',
-          filterIcon: 'filterIcon',
-          customRender: 'customRender',
-        },
-        onFilter: (value, record) =>
-            record.address.toString().toLowerCase().includes(value.toLowerCase()),
-        onFilterDropdownVisibleChange: visible => {
-          if (visible) {
-            setTimeout(() => {
-              searchInput.value.focus();
-            }, 100);
-          }
-        },
-      },
-      {
-        title: '时间段',
-        dataIndex: 'Time',
-        key: 'Time',
-        slots: {
-          filterDropdown: 'filterDropdown',
-          filterIcon: 'filterIcon',
-          customRender: 'customRender',
-        },
-        onFilter: (value, record) =>
-            record.address.toString().toLowerCase().includes(value.toLowerCase()),
-        onFilterDropdownVisibleChange: visible => {
-          if (visible) {
-            setTimeout(() => {
-              searchInput.value.focus();
-            }, 100);
-          }
-        },
-      },
-      {
-        title: '编辑',
-        key: 'operation',
-        fixed: 'right',
-        width: 200,
-        slots: {
-          customRender: 'action',
-        },
-      },
-    ];
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-      confirm();
-      state.searchText = selectedKeys[0];
-      state.searchedColumn = dataIndex;
-    };
-    const handleReset = clearFilters => {
-      clearFilters();
-      state.searchText = '';
-    };
-    return {
-      data,
-      columns,
-      handleSearch,
-      handleReset,
-      searchInput,
-      ...toRefs(state),
-    };
-  },
-});
 </script>
 <style scoped>
 .highlight {

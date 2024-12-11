@@ -7,8 +7,6 @@ import com.yk.graduation_project_admit.pojo.User;
 import com.yk.graduation_project_admit.pojo.dto.admit_login_dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +28,7 @@ public class AdmitController {
 
     /**
      * 管理员登录
-     * 
+     *
      * @param loginDto 登录信息DTO
      * @return 登录结果
      */
@@ -55,13 +53,31 @@ public class AdmitController {
 
     /**
      * 获取所有用户信息
-     * 
+     *
      * @return 用户列表
      */
     @GetMapping("/getAllUser")
     public ResponseMessage getAllUser() {
         if (admitService.getAllUser() != null) {
             return ResponseMessage.success(admitService.getAllUser());
+        } else {
+            return ResponseMessage.fail("获取失败");
+        }
+    }
+
+    @GetMapping("/getAllRoom")
+    public ResponseMessage getAllRoom() {
+        if (admitService.getAllRoom() != null) {
+            return ResponseMessage.success(admitService.getAllRoom());
+        } else {
+            return ResponseMessage.fail("获取失败");
+        }
+    }
+
+    @GetMapping("/getAllReservation")
+    public ResponseMessage getAllReservation() {
+        if (admitService.getAllReservation() != null) {
+            return ResponseMessage.success(admitService.getAllReservation());
         } else {
             return ResponseMessage.fail("获取失败");
         }
@@ -78,8 +94,8 @@ public class AdmitController {
         }
     }
 
+
     /**
-     *
      * @param startDate
      * @param endDate
      * @return
