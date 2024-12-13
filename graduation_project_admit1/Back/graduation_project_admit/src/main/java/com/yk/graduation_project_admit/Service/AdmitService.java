@@ -2,9 +2,11 @@ package com.yk.graduation_project_admit.Service;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.yk.graduation_project_admit.pojo.Admit;
 import com.yk.graduation_project_admit.pojo.Reservation;
 import com.yk.graduation_project_admit.pojo.Room;
 import com.yk.graduation_project_admit.pojo.User;
+import com.yk.graduation_project_admit.repository.AdmitRepository;
 import com.yk.graduation_project_admit.repository.ReservationRepository;
 import com.yk.graduation_project_admit.repository.RoomRepository;
 import com.yk.graduation_project_admit.repository.UserRepository;
@@ -33,12 +35,14 @@ public class AdmitService {
     @Autowired
     private RoomRepository roomRepository;
 
+    @Autowired
+    private AdmitRepository admitRepository;
     /**
      * @param userNumber
      * @return
      */
-    public Optional<User> getAdmit(String userNumber) {
-        return UserRepository.findByUsername(userNumber);
+    public Admit getAdmit(String userNumber) {
+        return admitRepository.findAdmitByUserNumber(userNumber);
     }
 
     public List<User> getAllUser() {

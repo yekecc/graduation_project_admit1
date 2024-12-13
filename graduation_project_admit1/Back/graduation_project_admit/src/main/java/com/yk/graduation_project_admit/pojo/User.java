@@ -35,7 +35,6 @@ public class User {
     @Column(columnDefinition = "INT DEFAULT 0")
     private Integer role = 0; // 0-学生 1-教师 2-管理员
 
-    private String password;
 
     public User orElse(Object o) {
         return null;

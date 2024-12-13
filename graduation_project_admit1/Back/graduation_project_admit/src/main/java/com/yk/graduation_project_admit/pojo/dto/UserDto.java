@@ -12,12 +12,11 @@ import lombok.*;
 @Setter
 @Getter
 public class UserDto {
-    private Long id;
+    private long id;
     private String openid;
     private String username;
     private String userNumber;
     private String userClass;
     private String telephone;
-    private Integer role;
-    private String password;
+    private int role;
 }

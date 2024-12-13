@@ -1,15 +1,11 @@
 package com.yk.graduation_project_admit.controller;
 
 import com.yk.graduation_project_admit.Service.AdmitService;
+import com.yk.graduation_project_admit.pojo.Admit;
 import com.yk.graduation_project_admit.pojo.ResponseMessage;
-import com.yk.graduation_project_admit.pojo.User;
 import com.yk.graduation_project_admit.pojo.dto.admit_login_dto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 /**
  *
@@ -19,29 +15,26 @@ import java.util.Optional;
 public class AdmitController {
     @Autowired
     AdmitService admitService;
-
     /**
-     * 管理员登录
      *
-     * @param loginDto 登录信息DTO
-     * @return 登录结果
+     * @param loginDto
+     * @return
      */
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody admit_login_dto loginDto) {
-        Optional<User> UserOptional = admitService.getAdmit(loginDto.getUserNumber());
-        if (UserOptional.isPresent()) {
-            User user = UserOptional.get();
-            // 验证密码
-            if (user.getPassword().equals(loginDto.getPassword())) {
-                // 登录成功，返回用户对象
-                return ResponseEntity.ok(user);
-            } else {
-                // 密码错误
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-            }
+    public ResponseMessage login(@RequestBody admit_login_dto loginDto) {
+        if (loginDto == null) {
+            return ResponseMessage.fail("账号密码为空，数据异常");
         } else {
-            // 用户不存在
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            Admit admit = admitService.getAdmit(loginDto.getUserNumber());
+            if (admit == null) {
+                return ResponseMessage.fail("该用户不是管理员");
+            } else {
+                if (admit.getPassword().equals(loginDto.getPassword())) {
+                    return ResponseMessage.success(admit);
+                } else {
+                    return ResponseMessage.fail("密码有误");
+                }
+            }
         }
     }
 
@@ -76,7 +69,6 @@ public class AdmitController {
             return ResponseMessage.fail("获取失败");
         }
     }
-
 
     @PostMapping("/verifycode")
     public ResponseMessage verifycode(@RequestParam String code) {

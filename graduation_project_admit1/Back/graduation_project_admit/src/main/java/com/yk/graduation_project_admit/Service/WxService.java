@@ -1,5 +1,6 @@
 package com.yk.graduation_project_admit.Service;
 
+import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import com.yk.graduation_project_admit.pojo.Reservation;
 import com.yk.graduation_project_admit.pojo.Room;
@@ -80,8 +81,20 @@ public class WxService {
 
     public User addUser(UserDto userDto) {
         User user = new User();
+        System.out.println(userDto);
         BeanUtils.copyProperties(userDto, user);
-        return userRepository.save(user);
+        System.out.println(user);
+
+        boolean b = userRepository.existsByOpenid(user.getOpenid());
+        if (!b) {
+            return userRepository.save(user);
+        } else {
+            userRepository.updateUserDetails(userDto.getUsername(), userDto.getTelephone(), userDto.getUserClass(),
+                    userDto.getUserNumber(), userDto.getOpenid());
+            return null;
+        }
+
+
     }
 
     public Reservation createReservation(ReservationDto dto) {

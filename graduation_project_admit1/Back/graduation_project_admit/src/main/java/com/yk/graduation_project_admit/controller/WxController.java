@@ -66,11 +66,16 @@ public class WxController {
      * @return 更新后的用户信息
      */
     @PostMapping("/updateUser")
-    public ResponseMessage userLogin(UserDto user) {
-        try {
-            return ResponseMessage.success(wxService.addUser(user));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    public ResponseMessage userLogin(@RequestBody UserDto user) {
+        System.out.println(user);
+        if (user != null) {
+            try {
+                return ResponseMessage.success(wxService.addUser(user));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            return ResponseMessage.fail("数据有空");
         }
     }
 
