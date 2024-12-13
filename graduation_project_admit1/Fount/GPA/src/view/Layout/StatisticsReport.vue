@@ -3,7 +3,7 @@
         <h2>统计报表</h2>
         <div class="card-container">
             <!-- 用户数量卡片 -->
-            <el-card class="card card-users" shadow="hover">
+            <el-card class="card card-users" shadow="hover" @click="goToUserList">
                 <div class="card-content">
                     <el-icon>
                         <User />
@@ -13,8 +13,8 @@
                 </div>
             </el-card>
 
-            <!-- 房间数量卡片 -->
-            <el-card class="card card-rooms" shadow="hover">
+            <!-- 房间数量卡片 - 添加点击事件 -->
+            <el-card class="card card-rooms" shadow="hover" @click="goToClassList">
                 <div class="card-content">
                     <el-icon>
                         <House />
@@ -24,8 +24,8 @@
                 </div>
             </el-card>
 
-            <!-- 预约数量卡片 -->
-            <el-card class="card card-reservations" shadow="hover">
+            <!-- 预约数量卡片 - 添加点击事件 -->
+            <el-card class="card card-reservations" shadow="hover" @click="goToAppointmentList">
                 <div class="card-content">
                     <el-icon>
                         <Calendar />
@@ -41,17 +41,33 @@
 
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
 import * as echarts from 'echarts';
-import { getAllUsers } from '../../api/UserData'; // 获取用户数据
-import { getRoom } from '../../api/RoomData'; // 获取房间数据
-import { getReservations } from '../../api/RoomData'; // 获取预约数据
+import { getAllUsers } from '../../api/UserData';
+import { getRoom } from '../../api/RoomData';
+import { getReservations } from '../../api/RoomData';
 import { ElCard, ElIcon } from 'element-plus';
 import { User, House, Calendar } from '@element-plus/icons-vue';
+
+const router = useRouter();
 
 const roomCount = ref(0);
 const userCount = ref(0);
 const reservationCount = ref(0);
 const chartData = ref([]);
+
+// 跳转方法
+const goToUserList = () => {
+    router.push('/userList');
+};
+
+const goToClassList = () => {
+    router.push('/classList1');
+};
+
+const goToAppointmentList = () => {
+    router.push('/layout');
+};
 
 // 整合统计数据
 const fetchStatisticsData = async () => {
@@ -85,7 +101,7 @@ const fetchStatisticsData = async () => {
     }
 };
 
-// 处理预约数据以生成折线图数据
+// 处理预约数据以成折线图数据
 const processReservationData = (reservations) => {
     const reservationCountByDate = {};
 
@@ -148,6 +164,8 @@ onMounted(() => {
 }
 
 .card {
+    cursor: pointer;
+    /* 所有卡片都添加手型光标 */
     border-radius: 12px;
     padding: 20px;
     text-align: center;

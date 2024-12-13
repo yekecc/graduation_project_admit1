@@ -1,17 +1,24 @@
 <template>
   <h2 style="margin-bottom: 16px;">预约列表</h2>
-  <a-button style="margin: 16px;" type="primary" @click="exportToExcel">导出 Excel</a-button>
-  <a-table :columns="columns" :data-source="reservations" :row-key="record => record.id">
+
+  <a-button @click="exportToExcel" type="primary" style="margin: 16px;">导出 Excel</a-button>
+  <a-table :data-source="reservations" :columns="columns" :row-key="record => record.id" :pagination="{
+    pageSize: 5,
+    showSizeChanger: false,
+    showQuickJumper: true,
+    showTotal: total => `共 ${total} 条`
+  }">
+
     <template #filterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
       <div style="padding: 8px">
         <a-input ref="searchInput" :placeholder="`Search ${column.dataIndex}`" :value="selectedKeys[0]"
-                 style="width: 188px; margin-bottom: 8px; display: block"
-                 @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
-                 @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"/>
+          style="width: 188px; margin-bottom: 8px; display: block"
+          @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
+          @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)" />
         <a-button size="small" style="width: 90px; margin-right: 8px" type="primary"
-                  @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
+          @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
           <template #icon>
-            <SearchOutlined/>
+            <SearchOutlined />
           </template>
           Search
         </a-button>
@@ -21,7 +28,7 @@
       </div>
     </template>
     <template #filterIcon="filtered">
-      <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }"/>
+      <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
     </template>
     <template #customRender="{ text, column }">
       <span v-if="searchText && searchedColumn === column.dataIndex">
@@ -46,11 +53,11 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue';
-import {saveAs} from 'file-saver';
+import { onMounted, ref } from 'vue';
+import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import {getReservations} from '../../api/RoomData'; // 导入新的 API 方法
-import {SearchOutlined} from '@ant-design/icons-vue';
+import { getReservations } from '../../api/RoomData'; // 导入新的 API 方法
+import { SearchOutlined } from '@ant-design/icons-vue';
 
 const searchText = ref('');
 const searchedColumn = ref('');
@@ -68,7 +75,7 @@ const fetchReservations = async () => {
       console.error('获取预约数据失败:', result.message);
     }
   } catch (error) {
-    console.error('请求失败:', error);
+    console.error('请��失败:', error);
   }
 };
 
@@ -77,8 +84,8 @@ const exportToExcel = () => {
   const ws = XLSX.utils.json_to_sheet(reservations.value);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Reservations');
-  const excelBuffer = XLSX.write(wb, {bookType: 'xlsx', type: 'array'});
-  const data = new Blob([excelBuffer], {type: 'application/octet-stream'});
+  const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
   saveAs(data, 'reservations.xlsx');
 };
 
@@ -97,7 +104,7 @@ const columns = [
       bodyCell: 'bodyCell',
     },
     onFilter: (value, record) =>
-        record.openid.toString().toLowerCase().includes(value.toLowerCase()),
+      record.openid.toString().toLowerCase().includes(value.toLowerCase()),
     onFilterDropdownOpenChange: visible => {
       if (visible) {
         setTimeout(() => {
@@ -122,19 +129,19 @@ const columns = [
     title: '时间段',
     dataIndex: 'timeSlot',
     key: 'timeSlot',
-    customRender: ({text}) =>
-        text == 1 ? '8:30-9:50' :
-            text == 2 ? '10:10-11:30' :
-                text == 3 ? '13:50-15:10' :
-                    text == 4 ? '15:20-16:40' :
-                        '未知时间段',
+    customRender: ({ text }) =>
+      text == 1 ? '8:30-9:50' :
+        text == 2 ? '10:10-11:30' :
+          text == 3 ? '13:50-15:10' :
+            text == 4 ? '15:20-16:40' :
+              '未知时间段',
   },
   {
     title: '使用情况',
     dataIndex: 'status',
     key: 'status',
-    customRender: ({text}) =>
-        text == 1 ? '未使用' : "已使用"
+    customRender: ({ text }) =>
+      text == 1 ? '未使用' : "已使用"
   },
   {
     title: '操作',

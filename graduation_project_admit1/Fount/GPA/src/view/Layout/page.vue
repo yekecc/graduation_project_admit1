@@ -1,12 +1,20 @@
 <script setup>
-import {computed} from 'vue';
-import {useRouter} from 'vue-router'
+import { computed } from 'vue';
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const routes = computed(() => {
   return router.options.routes[1].children
 })
 console.log(router.options.routes[1].children)
+
+// 添加退出登录方法
+const handleLogout = () => {
+  // 清除本地存储的登录信息（如果有的话）
+  localStorage.removeItem('token')  // 假设使用token存储登录状态
+  // 跳转到登录页
+  router.push('/login')
+}
 </script>
 <template>
   <a-layout style="min-height: 100vh">
@@ -19,9 +27,14 @@ console.log(router.options.routes[1].children)
           </router-link>
         </a-menu-item>
       </a-menu>
+      <div :style="{ padding: '16px 16px' }">
+        <a-space>
+          <a-button ghost @click="handleLogout">退出登录</a-button>
+        </a-space>
+      </div>
     </a-layout-sider>
     <a-layout>
-      <a-layout-header style="background: #fff; padding: 0"/>
+      <a-layout-header style="background: #fff; padding: 0" />
       <a-layout-content style="margin: 0 16px">
         <a-breadcrumb style="margin: 16px 0">
 

@@ -6,13 +6,12 @@ const routes = [
     {
         path: '/login',
         name: 'login',
-        component: () => import('../view/login/index.vue')
+        component: () => import('../view/login/index.vue'),
     }, {
         path: '/',
         name: 'Layout',
         component: Layout,
-
-        redirect: "/StatisticsReport",
+        redirect: "/login",
         children: [{
             path: '/StatisticsReport',
             component: () => import('../view/Layout/StatisticsReport.vue'),
@@ -44,6 +43,15 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes,
+})
+
+// 添加全局前置守卫
+router.beforeEach((to, from, next) => {
+    if (to.path === '/') {
+        next('/login')
+    } else {
+        next()
+    }
 })
 
 export default router
