@@ -107,7 +107,6 @@ public class WxController {
         }
     }
 
-
     /**
      * 获取用户的预约记录
      *
@@ -123,6 +122,7 @@ public class WxController {
             return ResponseMessage.fail("获取预约记录失败：" + e.getMessage());
         }
     }
+
 
     /**
      * 取消预约

@@ -1,5 +1,7 @@
 package com.yk.graduation_project_admit.Service;
 
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.yk.graduation_project_admit.pojo.Reservation;
 import com.yk.graduation_project_admit.pojo.Room;
 import com.yk.graduation_project_admit.pojo.User;
@@ -73,5 +75,30 @@ public class AdmitService {
         statistics.put("roomTypeDistribution", roomTypeStats);
 
         return statistics;
+    }
+
+    public int verifycode(String code) {
+        JSONObject jsonObject = JSONUtil.parseObj(code);
+
+        int roomId = jsonObject.getInt("roomID");
+        String openid = jsonObject.getStr("openid");
+        LocalDate reservationDate = LocalDate.parse(jsonObject.getStr("reservationDate"));
+
+        String timeslot = "";
+        if (jsonObject.getInt("status01") == 1) {
+            timeslot = "1";
+        } else if (jsonObject.getInt("status02") == 1) {
+            timeslot = "2";
+        } else if (jsonObject.getInt("status03") == 1) {
+            timeslot = "3";
+        } else if (jsonObject.getInt("status04") == 1) {
+            timeslot = "4";
+        }
+        if (reservationRepository.existsByOpenidAndReservationDateAndTimeSlotAndRoomId(openid, reservationDate, timeslot, (long) roomId)) {
+            return reservationRepository.updateStatusToConfirmed(openid, reservationDate, timeslot, (long) roomId);
+        } else {
+            return 0;
+        }
+
     }
 }

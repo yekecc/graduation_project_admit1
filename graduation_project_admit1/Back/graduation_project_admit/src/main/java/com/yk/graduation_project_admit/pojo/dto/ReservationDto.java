@@ -63,7 +63,7 @@ public class ReservationDto {
         dto.setRoomAddress(borrowDto.getRoomAddress());
         dto.setRoomType(borrowDto.getRoomType());
         dto.setReservationDate(borrowDto.getReservationDate());
-        dto.setUsePurpose(borrowDto.getUseTo());
+        dto.setUsePurpose(borrowDto.getRemark());
 
         if (borrowDto.getStatus01() == 1) dto.setTimeSlot("1");
         else if (borrowDto.getStatus02() == 1) dto.setTimeSlot("2");

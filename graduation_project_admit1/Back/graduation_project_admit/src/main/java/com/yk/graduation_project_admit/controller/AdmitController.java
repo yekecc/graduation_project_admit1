@@ -1,24 +1,18 @@
 package com.yk.graduation_project_admit.controller;
 
 import com.yk.graduation_project_admit.Service.AdmitService;
-import com.yk.graduation_project_admit.pojo.Reservation;
 import com.yk.graduation_project_admit.pojo.ResponseMessage;
 import com.yk.graduation_project_admit.pojo.User;
 import com.yk.graduation_project_admit.pojo.dto.admit_login_dto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.Map;
 import java.util.Optional;
 
 /**
- * 管理员控制器
- * 处理管理员相关的请求,包括登录、用户管理、预约审核等功能
+ *
  */
 @RestController
 @RequestMapping("/admit")
@@ -83,32 +77,43 @@ public class AdmitController {
         }
     }
 
-    public ResponseMessage getPendingReservations(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        try {
-            Page<Reservation> reservations = admitService.getPendingReservations(page, size);
-            return ResponseMessage.success(reservations);
-        } catch (Exception e) {
-            return ResponseMessage.fail("获取待审核预约失败：" + e.getMessage());
-        }
-    }
 
-
-    /**
-     * @param startDate
-     * @param endDate
-     * @return
-     */
-    @GetMapping("/reservations/statistics")
-    public ResponseMessage getReservationStatistics(
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-        try {
-            Map<String, Object> statistics = admitService.getReservationStatistics(startDate, endDate);
-            return ResponseMessage.success(statistics);
-        } catch (Exception e) {
-            return ResponseMessage.fail("获取统计信息失败：" + e.getMessage());
+    @PostMapping("/verifycode")
+    public ResponseMessage verifycode(@RequestParam String code) {
+        if (code != null && !code.isEmpty()) {
+            return ResponseMessage.success(admitService.verifycode(code));
+        } else {
+            return ResponseMessage.fail("數據有誤");
         }
     }
 }
+
+//    public ResponseMessage getPendingReservations(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size) {
+//        try {
+//            Page<Reservation> reservations = admitService.getPendingReservations(page, size);
+//            return ResponseMessage.success(reservations);
+//        } catch (Exception e) {
+//            return ResponseMessage.fail("获取待审核预约失败：" + e.getMessage());
+//        }
+//    }
+//
+//
+//    /**
+//     * @param startDate
+//     * @param endDate
+//     * @return
+//     */
+//    @GetMapping("/reservations/statistics")
+//    public ResponseMessage getReservationStatistics(
+//            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+//            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+//        try {
+//            Map<String, Object> statistics = admitService.getReservationStatistics(startDate, endDate);
+//            return ResponseMessage.success(statistics);
+//        } catch (Exception e) {
+//            return ResponseMessage.fail("获取统计信息失败：" + e.getMessage());
+//        }
+//    }
+//}

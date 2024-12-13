@@ -46,7 +46,7 @@ public class BorrowDto {
     /**
      * 使用目的
      */
-    private String useTo;
+    private String remark;
 
     /**
      * 早上8点是否可借
