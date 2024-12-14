@@ -20,6 +20,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     boolean existsByOpenid(String openid);
     @Transactional
     @Modifying
-    @Query("update User u SET u.username = ?1, u.telephone = ?2, u.userClass = ?3, u.userNumber = ?4 where u.openid = ?5")
-    void updateUserDetails(String username, String telephone, String userClass, String userNumber, String openid);
+    @Query("update User u SET u.username = ?1, u.telephone = ?2, u.userNumber = ?3 where u.openid = ?4")
+    void updateUserDetails(String username, String telephone, String userNumber, String openid);
 }

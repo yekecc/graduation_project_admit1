@@ -71,7 +71,7 @@ public class AdmitController {
     }
 
     @PostMapping("/verifycode")
-    public ResponseMessage verifycode(@RequestParam String code) {
+    public ResponseMessage verifycode(@RequestBody String code) {
         if (code != null && !code.isEmpty()) {
             return ResponseMessage.success(admitService.verifycode(code));
         } else {

@@ -29,7 +29,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByOpenidOrderByIdDesc(String openid);
 
     @Query("SELECT r FROM Reservation r WHERE r.openid = ?1 AND r.reservationDate = ?2 AND r.timeSlot = ?3 AND r.room.id = ?4")
-    boolean existsByOpenidAndReservationDateAndTimeSlotAndRoomId(String openid, LocalDate reservationDate, String timeSlot, Long roomId);
+    Reservation existsByOpenidAndReservationDateAndTimeSlotAndRoomId(String openid, LocalDate reservationDate, String timeSlot, Long roomId);
 
     @Modifying
     @Transactional

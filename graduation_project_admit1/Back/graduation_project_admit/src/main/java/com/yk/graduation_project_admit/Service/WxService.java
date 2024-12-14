@@ -89,7 +89,7 @@ public class WxService {
         if (!b) {
             return userRepository.save(user);
         } else {
-            userRepository.updateUserDetails(userDto.getUsername(), userDto.getTelephone(), userDto.getUserClass(),
+            userRepository.updateUserDetails(userDto.getUsername(), userDto.getTelephone(),
                     userDto.getUserNumber(), userDto.getOpenid());
             return null;
         }

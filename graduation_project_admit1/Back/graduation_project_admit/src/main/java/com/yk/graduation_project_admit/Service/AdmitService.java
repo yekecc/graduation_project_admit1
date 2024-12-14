@@ -82,7 +82,14 @@ public class AdmitService {
     }
 
     public int verifycode(String code) {
-        JSONObject jsonObject = JSONUtil.parseObj(code);
+        System.out.println(code);
+
+        // 解析外层 JSON 以获取 data 字段
+        JSONObject outerJsonObject = JSONUtil.parseObj(code);
+        String data = outerJsonObject.getStr("data");
+
+        // 解析 data 字段中的 JSON 字符串
+        JSONObject jsonObject = JSONUtil.parseObj(data);
 
         int roomId = jsonObject.getInt("roomID");
         String openid = jsonObject.getStr("openid");
@@ -98,7 +105,7 @@ public class AdmitService {
         } else if (jsonObject.getInt("status04") == 1) {
             timeslot = "4";
         }
-        if (reservationRepository.existsByOpenidAndReservationDateAndTimeSlotAndRoomId(openid, reservationDate, timeslot, (long) roomId)) {
+        if (reservationRepository.existsByOpenidAndReservationDateAndTimeSlotAndRoomId(openid, reservationDate, timeslot, (long) roomId) !=null) {
             return reservationRepository.updateStatusToConfirmed(openid, reservationDate, timeslot, (long) roomId);
         } else {
             return 0;

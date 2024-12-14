@@ -16,7 +16,6 @@ public class UserDto {
     private String openid;
     private String username;
     private String userNumber;
-    private String userClass;
     private String telephone;
     private int role;
 }

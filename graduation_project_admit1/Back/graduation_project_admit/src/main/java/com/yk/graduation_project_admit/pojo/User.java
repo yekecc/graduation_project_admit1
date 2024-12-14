@@ -28,7 +28,6 @@ public class User {
 
     private String userNumber;
 
-    private String userClass;
 
     private String telephone;
 

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 微信小程序控制器
@@ -52,8 +51,12 @@ public class WxController {
             String openid = jsonObject.get("openid").toString();
             String sessionkey = jsonObject.get("session_key").toString();
             User userPro = wxService.getUser(openid);
-
-            jsonObject.putOpt("userPro", Objects.requireNonNullElseGet(userPro, () -> jsonObject.isNull("userPro")));
+            if (userPro == null) {
+                jsonObject.putOpt("userPro", "true");
+            } else {
+                jsonObject.putOpt("userPro", userPro);
+                jsonObject.putOpt("openid", openid);
+            }
 
             return ResponseMessage.success(jsonObject);
         }
