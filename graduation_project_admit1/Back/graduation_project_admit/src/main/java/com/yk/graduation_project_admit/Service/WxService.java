@@ -38,21 +38,20 @@ public class WxService {
     private RoomRepository roomRepository;
 
     /**
+     * 获取用户openid
      * @param code
      * @return openid session_key
      */
     public String getUserpro(String code) {
         if (code == null) {
-
             return "请求失败，code为空";
         } else {
-            String url = "https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code ";
+            String url = "https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&" +
+                    "grant_type=authorization_code ";
             url = url.replace("APPID", appid);
             url = url.replace("SECRET", appsecret);
             url = url.replace("JSCODE", code);
-
             String responseBody;
-
             try {
                 ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
                 responseBody = responseEntity.getBody();
@@ -63,7 +62,6 @@ public class WxService {
             } catch (RestClientException e) {
                 throw new RuntimeException(e);
             }
-
             return responseBody;
         }
     }
@@ -97,6 +95,11 @@ public class WxService {
 
     }
 
+    /**
+     * 创建预约
+     * @param dto
+     * @return
+     */
     public Reservation createReservation(ReservationDto dto) {
         // 检查时间段是否已被预约
         if (reservationRepository.existsByRoomIdAndReservationDateAndTimeSlotAndStatusNot(dto.getRoomId(),

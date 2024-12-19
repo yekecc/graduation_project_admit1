@@ -27,7 +27,6 @@ import java.util.List;
 public class WxController {
     @Autowired
     private WxService wxService;
-
     @Autowired
     private RoomService roomService;
     @Autowired
@@ -45,8 +44,6 @@ public class WxController {
             return ResponseMessage.fail("code不能为空");
         } else {
             String response = wxService.getUserpro(code);
-            // System.out.println("code:" + code);
-            // System.out.println(response);
             JSONObject jsonObject = new JSONObject(response);
             String openid = jsonObject.get("openid").toString();
             String sessionkey = jsonObject.get("session_key").toString();

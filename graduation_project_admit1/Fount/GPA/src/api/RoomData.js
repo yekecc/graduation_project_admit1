@@ -6,7 +6,12 @@ export function getRoom() {
         url: '/admit/getAllRoom',
     })
 }
-
+export function addroom(){
+    return service({
+        method: 'post',
+        url: '/admit/addRoom',
+    })
+}
 export function updateRoom(data) {
     return service({
         method: 'post',

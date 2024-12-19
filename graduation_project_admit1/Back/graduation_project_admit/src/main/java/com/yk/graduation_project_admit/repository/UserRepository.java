@@ -17,6 +17,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User getByOpenid(String openid);
 
+
     boolean existsByOpenid(String openid);
     @Transactional
     @Modifying

@@ -2,7 +2,8 @@ package com.yk.graduation_project_admit.Service;
 
 import com.yk.graduation_project_admit.pojo.Reservation;
 import com.yk.graduation_project_admit.pojo.Room;
-import com.yk.graduation_project_admit.pojo.dto.RoomDto;
+import com.yk.graduation_project_admit.pojo.dto.addRoom_dto;
+
 import com.yk.graduation_project_admit.pojo.vo.RoomAvailabilityVO;
 import com.yk.graduation_project_admit.repository.ReservationRepository;
 import com.yk.graduation_project_admit.repository.RoomRepository;
@@ -33,23 +34,23 @@ public class RoomService {
         return rooms.stream().map(room -> {
             RoomAvailabilityVO vo = RoomAvailabilityVO.fromRoom(room);
             Map<String, Boolean> timeSlots = new HashMap<>();
-            timeSlots.put("08:00-10:00", isTimeSlotAvailable(room, date, "08:00-10:00", reservations));
-            timeSlots.put("10:00-12:00", isTimeSlotAvailable(room, date, "10:00-12:00", reservations));
-            timeSlots.put("14:00-16:00", isTimeSlotAvailable(room, date, "14:00-16:00", reservations));
-            timeSlots.put("16:00-18:00", isTimeSlotAvailable(room, date, "16:00-18:00", reservations));
+            timeSlots.put("08:00-10:00", isTimeSlotAvailable(room, "08:00-10:00", reservations));
+            timeSlots.put("10:00-12:00", isTimeSlotAvailable(room, "10:00-12:00", reservations));
+            timeSlots.put("14:00-16:00", isTimeSlotAvailable(room, "14:00-16:00", reservations));
+            timeSlots.put("16:00-18:00", isTimeSlotAvailable(room, "16:00-18:00", reservations));
             vo.setTimeSlots(timeSlots);
             return vo;
         }).collect(Collectors.toList());
     }
 
-    private boolean isTimeSlotAvailable(Room room, LocalDate date, String timeSlot, List<Reservation> reservations) {
+    private boolean isTimeSlotAvailable(Room room, String timeSlot, List<Reservation> reservations) {
         return reservations.stream()
                 .noneMatch(r -> r.getRoom().getId().equals(room.getId())
                         && r.getTimeSlot().equals(timeSlot)
                         && r.getStatus() != 2); // 2表示已取消
     }
 
-    public Room addRoom(RoomDto roomDto) {
+    public Room addRoom(addRoom_dto roomDto) {
         Room room = new Room();
         BeanUtils.copyProperties(roomDto, room);
         return roomRepository.save(room);

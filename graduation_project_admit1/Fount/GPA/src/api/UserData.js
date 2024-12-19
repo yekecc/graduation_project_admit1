@@ -10,4 +10,10 @@ export function getAllUsers() {
         method: 'get',
         url: '/admit/getAllUser',
     });
+}
+export function delUser() {
+    return service({
+        method: 'delete',
+        url: '/admit/delUser',
+    });
 } 

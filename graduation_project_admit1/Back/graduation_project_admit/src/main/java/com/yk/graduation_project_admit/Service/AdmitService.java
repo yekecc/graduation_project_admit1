@@ -11,17 +11,12 @@ import com.yk.graduation_project_admit.repository.ReservationRepository;
 import com.yk.graduation_project_admit.repository.RoomRepository;
 import com.yk.graduation_project_admit.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -37,6 +32,13 @@ public class AdmitService {
 
     @Autowired
     private AdmitRepository admitRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    public void delReservation(long reservationId) {
+        reservationRepository.deleteAllById(Collections.singleton(reservationId));
+    }
+
     /**
      * @param userNumber
      * @return
@@ -57,44 +59,16 @@ public class AdmitService {
         return reservationRepository.findAll();
     }
 
-    public Page<Reservation> getPendingReservations(int page, int size) {
-        return reservationRepository.findByStatusOrderByIdDesc(0, PageRequest.of(page, size));
-    }
-
-    public Map<String, Object> getReservationStatistics(LocalDate startDate, LocalDate endDate) {
-        Map<String, Object> statistics = new HashMap<>();
-
-        List<Reservation> approvedReservations = reservationRepository
-                .findByReservationDateBetweenAndStatus(startDate, endDate, 1);
-        List<Reservation> rejectedReservations = reservationRepository
-                .findByReservationDateBetweenAndStatus(startDate, endDate, 2);
-
-        statistics.put("totalApproved", approvedReservations.size());
-        statistics.put("totalRejected", rejectedReservations.size());
-
-        Map<String, Long> roomTypeStats = approvedReservations.stream()
-                .collect(Collectors.groupingBy(
-                        r -> r.getRoom().getRoomType(),
-                        Collectors.counting()));
-        statistics.put("roomTypeDistribution", roomTypeStats);
-
-        return statistics;
-    }
-
     public int verifycode(String code) {
         System.out.println(code);
-
         // 解析外层 JSON 以获取 data 字段
         JSONObject outerJsonObject = JSONUtil.parseObj(code);
         String data = outerJsonObject.getStr("data");
-
         // 解析 data 字段中的 JSON 字符串
         JSONObject jsonObject = JSONUtil.parseObj(data);
-
         int roomId = jsonObject.getInt("roomID");
         String openid = jsonObject.getStr("openid");
         LocalDate reservationDate = LocalDate.parse(jsonObject.getStr("reservationDate"));
-
         String timeslot = "";
         if (jsonObject.getInt("status01") == 1) {
             timeslot = "1";
@@ -105,11 +79,15 @@ public class AdmitService {
         } else if (jsonObject.getInt("status04") == 1) {
             timeslot = "4";
         }
-        if (reservationRepository.existsByOpenidAndReservationDateAndTimeSlotAndRoomId(openid, reservationDate, timeslot, (long) roomId) !=null) {
+        if (reservationRepository.existsByOpenidAndReservationDateAndTimeSlotAndRoomId(openid, reservationDate,
+                timeslot, (long) roomId) != null) {
             return reservationRepository.updateStatusToConfirmed(openid, reservationDate, timeslot, (long) roomId);
         } else {
             return 0;
         }
+    }
 
+    public void delUser(int userID) {
+        userRepository.deleteById(userID);
     }
 }

@@ -1,9 +1,12 @@
 package com.yk.graduation_project_admit.controller;
 
 import com.yk.graduation_project_admit.Service.AdmitService;
+import com.yk.graduation_project_admit.Service.RoomService;
 import com.yk.graduation_project_admit.pojo.Admit;
 import com.yk.graduation_project_admit.pojo.ResponseMessage;
 import com.yk.graduation_project_admit.pojo.dto.admit_login_dto;
+import com.yk.graduation_project_admit.pojo.dto.addRoom_dto;
+import com.yk.graduation_project_admit.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +18,10 @@ import org.springframework.web.bind.annotation.*;
 public class AdmitController {
     @Autowired
     AdmitService admitService;
+    @Autowired
+    private RoomService roomService;
+
     /**
-     *
      * @param loginDto
      * @return
      */
@@ -78,8 +83,40 @@ public class AdmitController {
             return ResponseMessage.fail("數據有誤");
         }
     }
-}
 
+    @PostMapping("/addRoom")
+    public ResponseMessage addRoom(@RequestBody addRoom_dto addRoomDto) {
+        if (addRoomDto == null) {
+            return ResponseMessage.fail("数据为空");
+
+        } else {
+            return ResponseMessage.success(roomService.addRoom(addRoomDto));
+        }
+    }
+
+    @DeleteMapping("delreservation")
+    public ResponseMessage delReservation(@RequestParam int reservationId) {
+        if (reservationId > 0) {
+            admitService.delReservation(reservationId);
+
+            return ResponseMessage.success("删除成功");
+        } else {
+            return ResponseMessage.fail("非法id");
+        }
+
+    }
+    @DeleteMapping("delUser")
+    public ResponseMessage delUser(@RequestParam int userID) {
+        if (userID > 0) {
+            admitService.delUser(userID);
+
+            return ResponseMessage.success("删除成功");
+        } else {
+            return ResponseMessage.fail("非法id");
+        }
+
+    }
+}
 //    public ResponseMessage getPendingReservations(
 //            @RequestParam(defaultValue = "0") int page,
 //            @RequestParam(defaultValue = "10") int size) {

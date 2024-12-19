@@ -45,8 +45,8 @@
         {{ text }}
       </template>
     </template>
-    <template #action>
-      <a-button type="primary">删除</a-button>
+    <template #action="{ record }">
+      <a-button type="primary" @click="deleteReservation(record.id)">删除</a-button>
     </template>
   </a-table>
 
@@ -58,6 +58,7 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { getReservations } from '../../api/RoomData'; // 导入新的 API 方法
 import { SearchOutlined } from '@ant-design/icons-vue';
+import {delreservation} from "../../api/reservstion.js";
 
 const searchText = ref('');
 const searchedColumn = ref('');
@@ -75,7 +76,7 @@ const fetchReservations = async () => {
       console.error('获取预约数据失败:', result.message);
     }
   } catch (error) {
-    console.error('请��失败:', error);
+    console.error('请求失败:', error);
   }
 };
 
@@ -87,6 +88,23 @@ const exportToExcel = () => {
   const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
   const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
   saveAs(data, 'reservations.xlsx');
+};
+
+const deleteReservation = async (reservationId) => {
+  try {
+    // 调用删除 API 方法
+    const response = await delreservation(reservationId);
+    const result = response.data;
+    if (result.code === 200) {
+      // 重新获取预约数据以更新列表
+      await fetchReservations();
+      console.log('删除成功:', result.message);
+    } else {
+      console.error('删除失败:', result.message);
+    }
+  } catch (error) {
+    console.error('请求失败:', error);
+  }
 };
 
 // 在组件挂载时调用接口

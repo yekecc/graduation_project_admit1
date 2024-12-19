@@ -2,14 +2,14 @@
   <a-card title="科室列表">
     <div style="margin-bottom: 16px;">
       <a-button type="primary" @click="showAddRoomModal">添加教室</a-button>
-      <a-button type="default" @click="exportExcel" style="margin-left: 8px;">导出 Excel</a-button>
+      <a-button style="margin-left: 8px;" type="default" @click="exportExcel">导出 Excel</a-button>
     </div>
     <a-table :dataSource="rooms" :rowKey="room => room.id">
-      <a-table-column title="科室名称" dataIndex="roomName" />
-      <a-table-column title="科室地址" dataIndex="roomAddress" />
-      <a-table-column title="科室类型" dataIndex="roomType" />
-      <a-table-column title="容量" dataIndex="capacity" />
-      <a-table-column title="设备" dataIndex="equipment" />
+      <a-table-column dataIndex="roomName" title="科室名称"/>
+      <a-table-column dataIndex="roomAddress" title="科室地址"/>
+      <a-table-column dataIndex="roomType" title="科室类型"/>
+      <a-table-column dataIndex="capacity" title="容量"/>
+      <a-table-column dataIndex="equipment" title="设备"/>
       <a-table-column title="状态">
         <template #default="{ record }">
           {{ record.status ? '可用' : '不可用' }}
@@ -18,22 +18,23 @@
     </a-table>
 
     <!-- 添加教室模态框 -->
-    <a-modal v-model:visible="isAddRoomModalVisible" title="添加教室" @ok="addRoom" @cancel="isAddRoomModalVisible = false">
+    <a-modal v-model:visible="isAddRoomModalVisible" title="添加教室" @cancel="isAddRoomModalVisible = false"
+             @ok="addRoom">
       <a-form>
         <a-form-item label="科室名称">
-          <a-input v-model="newRoom.roomName" />
+          <a-input v-model="newRoom.roomName"/>
         </a-form-item>
         <a-form-item label="科室地址">
-          <a-input v-model="newRoom.roomAddress" />
+          <a-input v-model="newRoom.roomAddress"/>
         </a-form-item>
         <a-form-item label="科室类型">
-          <a-input v-model="newRoom.roomType" />
+          <a-input v-model="newRoom.roomType"/>
         </a-form-item>
         <a-form-item label="容量">
-          <a-input type="number" v-model="newRoom.capacity" />
+          <a-input v-model="newRoom.capacity" type="number"/>
         </a-form-item>
         <a-form-item label="设备">
-          <a-input v-model="newRoom.equipment" />
+          <a-input v-model="newRoom.equipment"/>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -41,8 +42,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { getRoom } from '../../api/RoomData'; // 引入获取科室信息的 API
+import {onMounted, ref} from 'vue';
+import {addroom, getRoom} from '../../api/RoomData'; // 引入获取科室信息的 API
 import * as XLSX from 'xlsx'; // 引入 xlsx 库
 
 const rooms = ref([]); // 用于存储科室信息
@@ -73,11 +74,13 @@ const showAddRoomModal = () => {
   isAddRoomModalVisible.value = true; // 显示添加教室模态框
 };
 
-const addRoom = () => {
+const addRoom = async () => {
+  await addroom(...newRoom.value)
   // 这里可以添加逻辑将新教室信息发送到后端
-  rooms.value.push({ ...newRoom.value, id: rooms.value.length + 1 }); // 模拟添加教室
+  rooms.value.push({...newRoom.value, id: rooms.value.length + 1}); // 模拟添加教室
+
   isAddRoomModalVisible.value = false; // 关闭模态框
-  newRoom.value = { roomName: '', roomAddress: '', roomType: '', capacity: null, equipment: '', status: true }; // 重置表单
+  newRoom.value = {roomName: '', roomAddress: '', roomType: '', capacity: null, equipment: '', status: true}; // 重置表单
 };
 
 const exportExcel = () => {
