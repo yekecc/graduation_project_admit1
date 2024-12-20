@@ -116,6 +116,17 @@ public class AdmitController {
         }
 
     }
+    @DeleteMapping("delRoom")
+    public ResponseMessage delRoom(@RequestParam int roomID) {
+        if (roomID > 0) {
+            admitService.delRoom(roomID);
+
+            return ResponseMessage.success("删除成功");
+        } else {
+            return ResponseMessage.fail("非法id");
+        }
+
+    }
 }
 //    public ResponseMessage getPendingReservations(
 //            @RequestParam(defaultValue = "0") int page,

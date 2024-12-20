@@ -11,9 +11,9 @@ export function getAllUsers() {
         url: '/admit/getAllUser',
     });
 }
-export function delUser() {
+export function delUser(userId) {
     return service({
         method: 'delete',
-        url: '/admit/delUser',
+        url: `/admit/delUser?userID=${userId}`,
     });
 } 

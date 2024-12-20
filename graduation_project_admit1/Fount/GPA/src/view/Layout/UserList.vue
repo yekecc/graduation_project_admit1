@@ -39,7 +39,7 @@
           {{ text }}
         </template>
       </template>
-      <template #action>
+      <template #action="{ record }">
         <a-button type="primary" @click="deleteUser(record.id)">删除</a-button>
       </template>
     </a-table>
@@ -49,10 +49,10 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue';
-import { getAllUsers } from '../../api/UserData'; // 导入新的 API 方法
+import { getAllUsers, delUser } from '../../api/UserData'; // 导入新的 API 方法
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import {delUser} from "../../api/UserData";
+import { Modal } from 'ant-design-vue';
 
 const searchText = ref('');
 const searchedColumn = ref('');
@@ -126,18 +126,28 @@ const fetchUsers = async () => {
 
 const deleteUser = async (userId) => {
   try {
-    const response = await delUser(userId);
-    const result = response.data;
-    if (result.code === 200) {
-      await fetchUsers(); // 重新获取用户数据
-      console.log('删除成功:', result.message);
-    } else {
-      console.error('删除失败:', result.message);
-    }
+    Modal.confirm({
+      title: '确认删除',
+      content: '确定要删除这个用户吗？此操作不可恢复。',
+      okText: '确认',
+      cancelText: '取消',
+      async onOk() {
+        const response = await delUser(userId);
+        if (response.data.code === 200) {
+          await fetchUsers();
+        } else {
+          console.error('删除用户失败:', response.data.message);
+        }
+      },
+      onCancel() {
+        console.log('取消删除');
+      },
+    });
   } catch (error) {
-    console.error('请求失败:', error);
+    console.error('删除请求失败:', error);
   }
 };
+
 // 导出 Excel
 const exportToExcel = () => {
   const ws = XLSX.utils.json_to_sheet(data.value); // 将数据转换为工作表

@@ -58,7 +58,8 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { getReservations } from '../../api/RoomData'; // 导入新的 API 方法
 import { SearchOutlined } from '@ant-design/icons-vue';
-import {delreservation} from "../../api/reservstion.js";
+import { delreservation } from "../../api/reservstion.js";
+import { Modal } from 'ant-design-vue';
 
 const searchText = ref('');
 const searchedColumn = ref('');
@@ -92,16 +93,25 @@ const exportToExcel = () => {
 
 const deleteReservation = async (reservationId) => {
   try {
-    // 调用删除 API 方法
-    const response = await delreservation(reservationId);
-    const result = response.data;
-    if (result.code === 200) {
-      // 重新获取预约数据以更新列表
-      await fetchReservations();
-      console.log('删除成功:', result.message);
-    } else {
-      console.error('删除失败:', result.message);
-    }
+    Modal.confirm({
+      title: '确认删除',
+      content: '确定要删除这个预约记录吗？此操作不可恢复。',
+      okText: '确认',
+      cancelText: '取消',
+      async onOk() {
+        const response = await delreservation(reservationId);
+        const result = response.data;
+        if (result.code === 200) {
+          await fetchReservations();
+          console.log('删除成功:', result.message);
+        } else {
+          console.error('删除失败:', result.message);
+        }
+      },
+      onCancel() {
+        console.log('取消删除');
+      },
+    });
   } catch (error) {
     console.error('请求失败:', error);
   }

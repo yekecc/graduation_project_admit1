@@ -6,17 +6,17 @@ export function getRoom() {
         url: '/admit/getAllRoom',
     })
 }
-export function addroom(){
+export function addroom(data) {
     return service({
         method: 'post',
         url: '/admit/addRoom',
+        data
     })
 }
-export function updateRoom(data) {
+export function delroom(id) {
     return service({
-        method: 'post',
-        url: '/room',
-        data
+        method: 'delete',
+        url: `/admit/delRoom?roomID=${id}`,
     })
 }
 

@@ -90,4 +90,8 @@ public class AdmitService {
     public void delUser(int userID) {
         userRepository.deleteById(userID);
     }
+
+    public void delRoom(int roomID) {
+        roomRepository.deleteById(roomID);
+    }
 }
