@@ -6,6 +6,7 @@ import com.yk.graduation_project_admit.pojo.Admit;
 import com.yk.graduation_project_admit.pojo.ResponseMessage;
 import com.yk.graduation_project_admit.pojo.dto.admit_login_dto;
 import com.yk.graduation_project_admit.pojo.dto.addRoom_dto;
+import com.yk.graduation_project_admit.pojo.dto.update_user_dto;
 import com.yk.graduation_project_admit.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -116,6 +117,7 @@ public class AdmitController {
         }
 
     }
+
     @DeleteMapping("delRoom")
     public ResponseMessage delRoom(@RequestParam int roomID) {
         if (roomID > 0) {
@@ -124,6 +126,17 @@ public class AdmitController {
             return ResponseMessage.success("删除成功");
         } else {
             return ResponseMessage.fail("非法id");
+        }
+    }
+
+    @PostMapping("/updateUser")
+    public ResponseMessage updateUser(@RequestBody update_user_dto updateUserDto) {
+        System.out.println(updateUserDto);
+        if (updateUserDto == null) {
+            return ResponseMessage.fail("非法参数");
+        }else{
+             admitService.updateUser(updateUserDto);
+            return ResponseMessage.success("修改成功");
         }
 
     }

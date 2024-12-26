@@ -40,24 +40,58 @@
         </template>
       </template>
       <template #action="{ record }">
+        <a-button type="primary" @click="editUser(record.id)">修改</a-button>
         <a-button type="primary" @click="deleteUser(record.id)">删除</a-button>
       </template>
     </a-table>
+
+    <a-modal v-model:visible="isEditModalVisible" title="修改用户" @ok="submitEdit">
+      <a-form v-if="editForm.value" :model="editForm.value" :label-col="{ span: 4 }" :wrapper-col="{ span: 14 }">
+        <a-form-item label="用户名">
+          <a-input v-model:value="editForm.value.username" />
+        </a-form-item>
+        <a-form-item label="用户编号">
+          <a-input v-model:value="editForm.value.userNumber" />
+        </a-form-item>
+        <a-form-item label="角色">
+          <a-select v-model:value="editForm.value.role" placeholder="请选择角色">
+            <a-select-option :value="1">管理员</a-select-option>
+            <a-select-option :value="0">普通用户</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item label="电话">
+          <a-input v-model:value="editForm.value.telephone" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue';
-import { getAllUsers, delUser } from '../../api/UserData'; // 导入新的 API 方法
+import { Modal } from 'ant-design-vue';
+
+import { getAllUsers, updateUser } from '../../api/UserData';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { Modal } from 'ant-design-vue';
+import { delUser } from '../../api/UserData';
+import { message } from 'ant-design-vue';
 
 const searchText = ref('');
 const searchedColumn = ref('');
-const data = ref([]); // 用于存储用户数据
+const data = ref([]);
 const searchInput = ref();
+const isEditModalVisible = ref(false);
+const editForm = ref({
+  value: {
+    id: '',
+    username: '',
+    userNumber: '',
+    telephone: '',
+    role: 0,
+  },
+});
 
 const columns = [
   {
@@ -78,9 +112,10 @@ const columns = [
     key: 'userNumber',
   },
   {
-    title: '班级',
-    dataIndex: 'userClass',
-    key: 'userClass',
+    title: '角色',
+    dataIndex: 'role',
+    key: 'role',
+    customRender: ({ text }) => (text === 1 ? '管理员' : '普通用户'),
   },
   {
     title: '电话',
@@ -104,18 +139,17 @@ const handleSearch = (selectedKeys, confirm, dataIndex) => {
   searchedColumn.value = dataIndex;
 };
 
-const handleReset = clearFilters => {
+const handleReset = (clearFilters) => {
   clearFilters();
   searchText.value = '';
 };
 
-// 获取用户数据
 const fetchUsers = async () => {
   try {
-    const response = await getAllUsers(); // 调用封装的 API 方法
-    console.log(response)
+    const response = await getAllUsers();
     if (response.data.code === 200) {
-      data.value = response.data.data; // 存储获取到的用户数据
+      data.value = response.data.data;
+      console.log(data.value);
     } else {
       console.error('获取用户数据失败:', response.data.message);
     }
@@ -156,9 +190,63 @@ const exportToExcel = () => {
   const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' }); // 生成 Excel 文件
   const dataBlob = new Blob([excelBuffer], { type: 'application/octet-stream' }); // 创建 Blob 对象
   saveAs(dataBlob, '用户数据.xlsx'); // 使用 file-saver 保存文件
+
 };
 
-// 在组件挂载时调用接口
+const editUser = async (userId) => {
+  const foundUser = data.value.find((user) => user.id === userId);
+  if (foundUser) {
+    editForm.value = {
+      value: {
+        id: foundUser.id,
+        username: foundUser.username || '',
+        userNumber: foundUser.userNumber || '',
+        telephone: foundUser.telephone || '',
+        role: foundUser.role || 0,
+      },
+    };
+    console.log('editForm:', editForm.value); // 打印 editForm 的值
+    isEditModalVisible.value = true;
+  } else {
+    console.error('未找到用户:', userId);
+    message.error('未找到用户');
+  }
+};
+
+const submitEdit = async () => {
+  const formdata = {
+    id: 0,
+    username: '',
+    userNumber: '',
+    telephone: '',
+    role: 0
+
+  }
+  console.log(editForm.value.value)
+  formdata.id = editForm.value.value.id
+  formdata.role = editForm.value.value.role
+  formdata.username = editForm.value.value.userNumber
+  formdata.telephone = editForm.value.value.telephone
+  formdata.userNumber = editForm.value.value.userNumber
+  console.log('提交的 formData:', formdata); // 打印 formData 的值
+
+  // 确保将 editForm.value 直接传递给 updateUser
+  try {
+    const response = await updateUser(formdata); // 直接传递 editForm.value
+    if (response.data.code === 200) {
+      message.success('修改成功');
+      isEditModalVisible.value = false;
+      await fetchUsers();
+    } else {
+      console.error('修改失败:', response.data.message);
+      message.error(`修改失败: ${response.data.message}`);
+    }
+  } catch (error) {
+    console.error('请求失败:', error);
+    message.error('请求失败，请稍后重试');
+  }
+  fetchUsers();
+};
 onMounted(() => {
   fetchUsers();
 });

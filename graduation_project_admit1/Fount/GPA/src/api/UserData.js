@@ -16,4 +16,12 @@ export function delUser(userId) {
         method: 'delete',
         url: `/admit/delUser?userID=${userId}`,
     });
+}
+
+export function updateUser(data) {
+    return service({
+        method: 'post',
+        url: '/admit/updateUser',
+        data
+    });
 } 

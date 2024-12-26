@@ -6,6 +6,7 @@ import com.yk.graduation_project_admit.pojo.Admit;
 import com.yk.graduation_project_admit.pojo.Reservation;
 import com.yk.graduation_project_admit.pojo.Room;
 import com.yk.graduation_project_admit.pojo.User;
+import com.yk.graduation_project_admit.pojo.dto.update_user_dto;
 import com.yk.graduation_project_admit.repository.AdmitRepository;
 import com.yk.graduation_project_admit.repository.ReservationRepository;
 import com.yk.graduation_project_admit.repository.RoomRepository;
@@ -91,7 +92,12 @@ public class AdmitService {
         userRepository.deleteById(userID);
     }
 
+
     public void delRoom(int roomID) {
         roomRepository.deleteById(roomID);
+    }
+    public void updateUser(update_user_dto updateUserDto) {
+        userRepository.updateUserData(updateUserDto.getUsername(), updateUserDto.getTelephone(), updateUserDto.getUserNumber(),
+                updateUserDto.getRole(), updateUserDto.getId());
     }
 }
